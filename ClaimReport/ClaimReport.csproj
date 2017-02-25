@@ -248,6 +248,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\css\" />
+    <Folder Include="Content\font-awesome\" />
+    <Folder Include="Content\fonts\" />
+    <Folder Include="Content\images\" />
+    <Folder Include="Content\js\" />
+    <Folder Include="Content\swf\" />
     <Folder Include="Evidence\" />
   </ItemGroup>
   <ItemGroup>
