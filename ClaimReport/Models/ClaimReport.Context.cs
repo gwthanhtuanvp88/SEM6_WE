@@ -25,6 +25,13 @@ namespace ClaimReport.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Academyyear> Academyyears { get; set; }
+        public virtual DbSet<Claim> Claims { get; set; }
+        public virtual DbSet<ClaimReult> ClaimReults { get; set; }
+        public virtual DbSet<Coordinator> Coordinators { get; set; }
+        public virtual DbSet<Evidence> Evidences { get; set; }
+        public virtual DbSet<Faculty> Faculties { get; set; }
+        public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserType> UserTypes { get; set; }
     }
