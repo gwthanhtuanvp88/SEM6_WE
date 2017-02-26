@@ -1,0 +1,71 @@
+﻿@model ClaimReport.Models.Claim
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="text-capitalize">@Html.DisplayFor(model => model.name)</h1>
+<div class="row">
+    <div class="col-md-4 col-md-push-8">
+        <strong>Result:</strong>
+        @if (@ViewBag.claimResult != null)
+        {
+            @ViewBag.claimResult[0].description
+        }
+        else
+        {
+            <span>Not respond</span>
+        }
+
+        <br><br>
+
+        <strong>Student Name:</strong>
+        @Html.DisplayFor(model => model.Student.name)
+        <br>
+        <strong>Student ID:</strong>
+        @Html.DisplayFor(model => model.studentid)
+
+        <br><br>
+
+        <strong>Faculty:</strong>
+        @Html.DisplayFor(model => model.Student.Faculty.name)
+
+        <br>
+
+        <strong>Coordinator:</strong>
+        @if (@ViewBag.claimResult != null)
+        {
+            @ViewBag.claimResult[0].Coordinator.name
+            <br><br>
+        }
+
+
+        <strong>Start Report Date:</strong>
+        @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Academyyear.startReportDate))
+
+        <br>
+
+        <strong>Closure Report Date:</strong>
+        @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Academyyear.closureEvidenceDate))
+
+        <br>
+
+        <strong>Closure Evedence Date:</strong>
+        @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Academyyear.closureEvidenceDate))
+
+
+    </div>
+    <div class="col-md-8 col-md-pull-4">
+        @Html.DisplayFor(model => model.description)
+        <hr>
+
+        @if(ViewBag.evidence != null) {
+            foreach (var item in ViewBag.evidence)
+            {
+                <a href="@Request.Url.GetLeftPart(UriPartial.Authority)/Evidence/@item.filename" target="_blank">@item.filename</a> 
+                <br>
+            }
+        }
+    </div>
+</div>
