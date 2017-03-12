@@ -255,3 +255,4 @@ paket-files/
 /ClaimReport/Models/ClaimReport.edmx.diagram
 /ClaimReport/Models/ClaimReport.Designer.cs
 /.gitignore
+/ClaimReport/Models
