@@ -6,14 +6,35 @@ create database ReportClaim
 go
 use ReportClaim
 go
-create table UserTypes(
+
+create table UserType(
 	id int primary key identity(1,1),
 	name varchar(50),
-	description nvarchar(500),
+	description text,
 	status bit default 1
 )
+
+go 
+
+create table Role(
+	id int primary key identity(1,1),
+	description text,
+	status bit default 1
+)
+
 go
-create table Users(
+
+create table UserRole(
+	id int primary key identity(1,1),
+	description text,
+	roleid int not null references Role(id),
+	userTypeid int not null references UserType(id),
+	status bit default 1
+)
+
+go
+
+create table [User](
 	id int primary key identity(1,1),
 	username varchar(50),
 	password binary(16),
@@ -21,7 +42,7 @@ create table Users(
 	email nvarchar(100),
 	phone nvarchar(12),
 	address nvarchar(200),
-	usertypeid int not null references UserTypes(id),
+	usertypeid int not null references UserType(id),
 	status bit default 1,
 	active bit default 1
 )
@@ -38,24 +59,23 @@ create table Faculty(
 go
 
 create table Student(
-	id int primary key,
+	id int primary key identity(1,1),
 	facultyid int not null references Faculty(id),
+	userid int not null references [User](id),
 	status bit default 1
 )
 
 go 
-create table Manager(
-	id int primary key,
+
+create table Coordinator(
+	id int primary key identity(1,1),
+	facutyid int not null references Faculty(id),
+	userid int not null references [User](id),
 	status bit default 1
 )
 
 go 
-create table Administration(
-	id int primary key ,
-	status bit default 1
-)
 
-go 
 create table Academyyear(
 	id int primary key identity(1,1),
 	startReportDate date,
@@ -63,17 +83,7 @@ create table Academyyear(
 	closureEvidenceDate date,
 	status bit default 1
 )
-go 
 
-create table Coordinator(
-	id int primary key,
-	name nvarchar(50),
-	email nvarchar(100),
-	phone nvarchar(15),
-	address nvarchar(200),
-	facutyid int not null references Faculty(id),
-	status bit default 1
-)
 go
 
 create table Claim(
@@ -81,7 +91,7 @@ create table Claim(
 	name nvarchar(50),
 	description	text, 
 	studentid int not null references Student(id),
-	academyyear int not null references AcademyYear(id), 
+	academyyearid int not null references AcademyYear(id), 
 	coordinatorId int not null references Coordinator(id),
 	result tinyint default 0, /*0 means not process yey, 1 means refuse, 2 means accept*/
 	status bit default 1
@@ -96,8 +106,3 @@ create table Evidence(
 	claimid int not null references Claim(id),
 	status bit default 1
 )
-
-
-
-
-
