@@ -33,7 +33,7 @@ namespace ClaimReport.Controllers
             }
 
             ViewBag.evidence = db.Evidences.Where(x => x.claimid == id).ToList();
-            ViewBag.claimResult = db.ClaimReults.Where(x => x.claimid == id).ToList();
+            //ViewBag.claimResult = db.ClaimReults.Where(x => x.claimid == id).ToList();
 
             return View(claim);
         }
