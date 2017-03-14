@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ClaimReport.Models.Claim>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -19,6 +19,9 @@
             <th>
                 Start report date
             </th>
+            <th>
+                Closure report date
+            </th>
             <th></th>
         </tr>
 
@@ -29,10 +32,13 @@
                     @Html.DisplayFor(modelItem => item.name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Student.name)
+                    @Html.DisplayFor(modelItem => item.Student.User.name)
                 </td>
                 <td>
                     @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.Academyyear.startReportDate))
+                </td>
+                <td>
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.Academyyear.closureReportDate))
                 </td>
                 <td>
                     @Html.ActionLink("Details", "Details", new { id = item.id })
