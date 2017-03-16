@@ -34,6 +34,7 @@
     <script src="~/Content/js/html5shiv.min.js"></script>
     <script src="~/Content/js/respond.min.js"></script>
     <![endif]-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 
 <body class="no-skin">
@@ -362,12 +363,12 @@
 
     <div class="main-container ace-save-state" id="main-container">
         <script type="text/javascript">
-				try{ace.settings.loadState('main-container')}catch(e){}
+            try { ace.settings.loadState('main-container') } catch (e) { }
         </script>
 
         <div id="sidebar" class="sidebar                  responsive                    ace-save-state">
             <script type="text/javascript">
-					try{ace.settings.loadState('sidebar')}catch(e){}
+                try { ace.settings.loadState('sidebar') } catch (e) { }
             </script>
 
             <div class="sidebar-shortcuts" id="sidebar-shortcuts">
@@ -410,45 +411,45 @@
                     <b class="arrow"></b>
                 </li>
                 @{
-                            <li class="">
-                                <a href="#" class="dropdown-toggle">
-                                    <i class="menu-icon fa fa-list"></i>
-                                    <span class="menu-text"> Report </span>
+                    <li class="">
+                        <a href="#" class="dropdown-toggle">
+                            <i class="menu-icon fa fa-list"></i>
+                            <span class="menu-text"> Report </span>
 
-                                    <b class="arrow fa fa-angle-down"></b>
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+
+                        <b class="arrow"></b>
+
+                        <ul class="submenu">
+                            <li class="">
+                                <a href="@Url.Action("Index","Report")">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    All Report
                                 </a>
 
                                 <b class="arrow"></b>
-
-                                <ul class="submenu">
-                                    <li class="">
-                                        <a href="@Url.Action("Index","Report")">
-                                            <i class="menu-icon fa fa-caret-right"></i>
-                                            All Report
-                                        </a>
-
-                                        <b class="arrow"></b>
-                                    </li>
-
-                                    <li class="">
-                                        <a href="@Url.Action("ReportByBranch","Report")">
-                                            <i class="menu-icon fa fa-caret-right"></i>
-                                            Report by branch
-                                        </a>
-
-                                        <b class="arrow"></b>
-                                    </li>
-
-                                    <li class="">
-                                        <a href="@Url.Action("GetTotalOrderOfBranch","Report")">
-                                            <i class="menu-icon fa fa-caret-right"></i>
-                                            Report by employee
-                                        </a>
-
-                                        <b class="arrow"></b>
-                                    </li>
-                                </ul>
                             </li>
+
+                            <li class="">
+                                <a href="@Url.Action("ReportByBranch","Report")">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    Report by branch
+                                </a>
+
+                                <b class="arrow"></b>
+                            </li>
+
+                            <li class="">
+                                <a href="@Url.Action("GetTotalOrderOfBranch","Report")">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    Report by employee
+                                </a>
+
+                                <b class="arrow"></b>
+                            </li>
+                        </ul>
+                    </li>
                             <li class="">
                                 <a href="@Url.Action("Index", "Employees")">
                                     <i class="menu-icon fa fa-pencil-square-o"></i>
@@ -465,7 +466,7 @@
 
                                 <b class="arrow"></b>
                             </li>
-                        }
+                }
                 }
                 <li class="">
                     <a href="@Url.Action("Index", "Products")">
@@ -561,13 +562,14 @@
     <!-- basic scripts -->
     <!--[if !IE]> -->
     <script src="~/Content/js/jquery-2.1.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <!-- <![endif]-->
     <!--[if IE]>
     <script src="~/Content/js/jquery-1.11.3.min.js"></script>
     <![endif]-->
     <script type="text/javascript">
-			if('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+        if ('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
     </script>
     <script src="~/Content/js/bootstrap.min.js"></script>
 
@@ -577,5 +579,6 @@
     <script src="~/Content/js/ace.min.js"></script>
 
     <!-- inline scripts related to this page -->
+    <script src="~/Scripts/main.js"></script>
 </body>
 </html>
