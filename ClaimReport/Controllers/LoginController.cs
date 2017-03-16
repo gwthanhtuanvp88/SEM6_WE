@@ -26,9 +26,10 @@ namespace ClaimReport.Controllers
             {
                 hash = md5.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
-            if (db.Users.Where(u => u.username == username && u.password == hash && u.status == true).ToList().Count > 0)
+            var user = db.Users.FirstOrDefault(u => u.username == username && u.password == hash && u.status == true);
+            if (user != null)
             {
-                Session["user"] = db.Users;
+                Session["user"] = user;
                 return RedirectToAction("Index", "Home");
             }
             TempData["login"] = "fail";
