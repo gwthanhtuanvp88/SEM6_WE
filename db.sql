@@ -18,7 +18,7 @@ go
 
 create table Role(
 	id int primary key identity(1,1),
-	description text,
+	description varchar(50),
 	status bit default 1
 )
 
@@ -26,7 +26,7 @@ go
 
 create table UserRole(
 	id int primary key identity(1,1),
-	description text,
+	description varchar(50),
 	roleid int not null references Role(id),
 	userTypeid int not null references UserType(id),
 	status bit default 1

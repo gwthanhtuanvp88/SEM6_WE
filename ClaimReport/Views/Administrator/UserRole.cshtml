@@ -1,0 +1,51 @@
+﻿@model IEnumerable<ClaimReport.Models.UserRole>
+
+@{
+    ViewBag.Title = "UserRole";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>UserRole</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateUserRole")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.description)
+        </th>
+        <th>
+            Role
+        </th>
+        <th>
+            User Type
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.status)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Role.description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserType.name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.status)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EditUserRole", new { id=item.id }) |
+            @Html.ActionLink("Delete", "DeleteUserRole", new { id=item.id })
+        </td>
+    </tr>
+}
+
+</table>
