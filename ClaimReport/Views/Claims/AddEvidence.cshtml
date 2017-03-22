@@ -1,0 +1,53 @@
+﻿@model ClaimReport.Models.Claim
+
+@{
+    ViewBag.Title = "Add evidence";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var id = ViewBag.id;
+    var message = ViewBag.message;
+}
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(function(){
+        $("#addClaim").submit(function () {
+            if ($("#files").val() == null || $("#files").val() == "")
+            {
+                alert('You must upload evidence with the claim');
+                return false;
+            }
+            return true;
+        })
+    })
+</script>
+<h2>Add evidence</h2>
+
+@using (Html.BeginForm("AddEvidence", "Claims", FormMethod.Post, new { enctype = "multipart/form-data", id = "addClaim" }))
+{
+    @Html.AntiForgeryToken()
+    if(message != "")
+    {
+        <h3>@message</h3>
+    }
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" name="id" value="@id"/>
+
+        <div class="form-group">
+           @Html.Label("Evidence", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="file" accept=".pdf, image/*" id="files" multiple name="files" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

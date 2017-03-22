@@ -85,6 +85,14 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -158,6 +166,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdministratorController.cs" />
     <Compile Include="Controllers\ClaimsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManagerController.cs" />
@@ -216,6 +225,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -249,6 +259,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\main.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -275,10 +286,29 @@
     <Content Include="Views\Manager\Index.cshtml" />
     <Content Include="Views\Manager\Details.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Manager\index.cshtml" />
+    <Content Include="Views\Administrator\Role.cshtml" />
+    <Content Include="Views\Administrator\CreateRole.cshtml" />
+    <Content Include="Views\Administrator\EditRole.cshtml" />
+    <Content Include="Views\Administrator\UserType.cshtml" />
+    <Content Include="Views\Administrator\CreateUserType.cshtml" />
+    <Content Include="Views\Administrator\EditUserType.cshtml" />
+    <Content Include="Views\Administrator\UserRole.cshtml" />
+    <Content Include="Views\Administrator\CreateUserRole.cshtml" />
+    <Content Include="Views\Administrator\EditUserRole.cshtml" />
+    <Content Include="Views\Administrator\Faculty.cshtml" />
+    <Content Include="Views\Administrator\CreateFaculty.cshtml" />
+    <Content Include="Views\Administrator\EditFaculty.cshtml" />
+    <Content Include="Views\Administrator\Users.cshtml" />
+    <Content Include="Views\Administrator\CreateUser.cshtml" />
+    <Content Include="Views\Administrator\EditUser.cshtml" />
+    <Content Include="Views\Administrator\Academyyear.cshtml" />
+    <Content Include="Views\Administrator\CreateAcademyYear.cshtml" />
+    <Content Include="Views\Administrator\EditAcademyYear.cshtml" />
     <Content Include="Views\Claims\Create.cshtml" />
     <Content Include="Views\Claims\Delete.cshtml" />
     <Content Include="Views\Claims\Details.cshtml" />
-    <Content Include="Views\Claims\Edit.cshtml" />
+    <Content Include="Views\Claims\AddEvidence.cshtml" />
     <Content Include="Views\Claims\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

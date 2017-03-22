@@ -256,3 +256,4 @@ paket-files/
 /ClaimReport/Models/ClaimReport.Designer.cs
 /.gitignore
 /ClaimReport/Models
+/ClaimReport/Evidence

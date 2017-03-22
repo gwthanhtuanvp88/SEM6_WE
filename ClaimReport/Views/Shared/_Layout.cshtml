@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using ClaimReport.Models;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -322,8 +323,10 @@
                             <span class="user-info">
                                 <small>Welcome,</small>
                                 @{
-                                    if (Session["employee"] != null)
+                                    if (Session["user"] != null)
                                     {
+                                        User u = (User)Session["user"];
+                                        <small>@u.name</small>
                                     }
                                 }
                             </span>
@@ -403,9 +406,9 @@
 
             <ul class="nav nav-list">
                 <li class="">
-                    <a href="@Url.Action("Index", "Order")">
+                    <a href="@Url.Action("Index", "Claims")">
                         <i class="menu-icon fa fa-tachometer"></i>
-                        <span class="menu-text"> Order </span>
+                        <span class="menu-text"> Claim </span>
                     </a>
 
                     <b class="arrow"></b>
