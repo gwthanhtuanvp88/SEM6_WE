@@ -405,7 +405,7 @@ namespace ClaimReport.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateUser(User model, int facultyId)
+        public ActionResult CreateUser(User model, int facultyId, string pass)
         {
             ViewBag.Faculty = db.Faculties.ToList();
             ViewBag.UserType = db.UserTypes.ToList();
@@ -423,7 +423,7 @@ namespace ClaimReport.Controllers
                 flag = true;
             }
 
-            if (model.password == null)
+            if (String.IsNullOrEmpty(pass))
             {
                 ModelState.AddModelError("password", "Password is required!");
                 flag = true;
@@ -455,10 +455,12 @@ namespace ClaimReport.Controllers
             byte[] hash;
             using (MD5 md5 = MD5.Create())
             {
-                hash = md5.ComputeHash(Encoding.UTF8.GetBytes(model.password.ToString()));
+                hash = md5.ComputeHash(Encoding.UTF8.GetBytes(pass.ToString()));
             }
 
             model.password = hash;
+            model.status = true;
+            model.active = false;
             var user = db.Users.Add(model);
 
             var usertype = db.UserTypes.SingleOrDefault(x => x.id == model.usertypeid);
@@ -506,7 +508,7 @@ namespace ClaimReport.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditUser(User model, int facultyId)
+        public ActionResult EditUser(User model, int facultyId, string pass)
         {
             ViewBag.Faculty = db.Faculties.ToList();
             ViewBag.UserType = db.UserTypes.ToList();
@@ -524,7 +526,7 @@ namespace ClaimReport.Controllers
                 flag = true;
             }
 
-            if (model.password == null)
+            if (String.IsNullOrEmpty(pass))
             {
                 ModelState.AddModelError("password", "Password is required!");
                 flag = true;
@@ -558,7 +560,7 @@ namespace ClaimReport.Controllers
             byte[] hash;
             using (MD5 md5 = MD5.Create())
             {
-                hash = md5.ComputeHash(Encoding.UTF8.GetBytes(model.password.ToString()));
+                hash = md5.ComputeHash(Encoding.UTF8.GetBytes(pass));
             }
 
             model.password = hash;
@@ -572,8 +574,6 @@ namespace ClaimReport.Controllers
             user.phone = model.phone;
             user.address = model.address;
             user.usertypeid = model.usertypeid;
-            user.status = model.status;
-            user.active = model.active;
 
             var usertype = db.UserTypes.SingleOrDefault(x => x.id == model.usertypeid);
 
@@ -649,6 +649,7 @@ namespace ClaimReport.Controllers
 
             var flag = false;
 
+            // Check null
             if (model.startReportDate == null)
             {
                 ModelState.AddModelError("startReportDate", "Start Report Date is required!");
@@ -664,6 +665,44 @@ namespace ClaimReport.Controllers
             if (model.closureEvidenceDate == null)
             {
                 ModelState.AddModelError("closureEvidenceDate", "Closure Evidence Date is required!");
+                flag = true;
+            }
+
+
+            // Check ordinal
+            if (model.startReportDate != null && model.closureReportDate != null && model.closureEvidenceDate != null)
+            {
+                DateTime startDate = model.startReportDate.Value;
+                DateTime closureDate = model.closureReportDate.Value;
+                DateTime evidenceDate = model.closureEvidenceDate.Value;
+                int startClosureDateResult = DateTime.Compare(startDate, closureDate);
+                int startEvidenceDateResult = DateTime.Compare(startDate, evidenceDate);
+                int closureEvidenceDateResult = DateTime.Compare(closureDate, evidenceDate);
+
+                if (startClosureDateResult > 0)
+                {
+                    ModelState.AddModelError(String.Empty, "Start report Date must earlier than Closure report date!");
+                    flag = true;
+                }
+
+                if (startEvidenceDateResult > 0)
+                {
+                    ModelState.AddModelError(String.Empty, "Start report Date must earlier than Closure Evidence date!");
+                    flag = true;
+                }
+
+                if (closureEvidenceDateResult > 0)
+                {
+                    ModelState.AddModelError(String.Empty, "Closure report Date must earlier than Closure Evidence date!");
+                    flag = true;
+                }
+            }
+
+            // Check duplicate
+            var duplicate = db.Academyyears.Where(x => x.startReportDate == model.startReportDate && x.closureEvidenceDate == model.closureEvidenceDate && x.closureReportDate == model.closureReportDate).ToList();
+            if (duplicate != null)
+            {
+                ModelState.AddModelError(String.Empty, "This Academy year already exists.");
                 flag = true;
             }
 
@@ -689,7 +728,7 @@ namespace ClaimReport.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("CreateAcademyYear");
+                return View("EditAcademyYear");
             }
 
             var flag = false;
@@ -712,9 +751,37 @@ namespace ClaimReport.Controllers
                 flag = true;
             }
 
+            if (model.startReportDate != null && model.closureReportDate != null && model.closureEvidenceDate != null)
+            {
+                DateTime startDate = model.startReportDate.Value;
+                DateTime closureDate = model.closureReportDate.Value;
+                DateTime evidenceDate = model.closureEvidenceDate.Value;
+                int startClosureDateResult = DateTime.Compare(startDate, closureDate);
+                int startEvidenceDateResult = DateTime.Compare(startDate, evidenceDate);
+                int closureEvidenceDateResult = DateTime.Compare(closureDate, evidenceDate);
+
+                if (startClosureDateResult > 0)
+                {
+                    ModelState.AddModelError(String.Empty, "Start report Date must earlier than Closure report date!");
+                    flag = true;
+                }
+
+                if (startEvidenceDateResult > 0)
+                {
+                    ModelState.AddModelError(String.Empty, "Start report Date must earlier than Closure Evidence date!");
+                    flag = true;
+                }
+
+                if (closureEvidenceDateResult > 0)
+                {
+                    ModelState.AddModelError(String.Empty, "Closure report Date must earlier than Closure Evidence date!");
+                    flag = true;
+                }
+            }
+
             if (flag)
             {
-                return View("CreateAcademyYear");
+                return View("EditAcademyYear");
             }
 
 

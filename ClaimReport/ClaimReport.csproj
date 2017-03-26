@@ -172,6 +172,7 @@
     <Compile Include="Controllers\ManagerController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\UserTypesController.cs" />
+	<Compile Include="Controllers\CoordinatorController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -310,6 +311,8 @@
     <Content Include="Views\Claims\Details.cshtml" />
     <Content Include="Views\Claims\AddEvidence.cshtml" />
     <Content Include="Views\Claims\Index.cshtml" />
+	<Content Include="Views\Coordinator\Index.cshtml" />
+    <Content Include="Views\Shared\_Main_Menu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

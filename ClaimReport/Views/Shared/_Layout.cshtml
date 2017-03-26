@@ -1,5 +1,4 @@
-﻿@using ClaimReport.Models;
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -35,7 +34,6 @@
     <script src="~/Content/js/html5shiv.min.js"></script>
     <script src="~/Content/js/respond.min.js"></script>
     <![endif]-->
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 
 <body class="no-skin">
@@ -323,10 +321,8 @@
                             <span class="user-info">
                                 <small>Welcome,</small>
                                 @{
-                                    if (Session["user"] != null)
+                                    if (Session["employee"] != null)
                                     {
-                                        User u = (User)Session["user"];
-                                        <small>@u.name</small>
                                     }
                                 }
                             </span>
@@ -405,96 +401,7 @@
             </div><!-- /.sidebar-shortcuts -->
 
             <ul class="nav nav-list">
-                <li class="">
-                    <a href="@Url.Action("Index", "Claims")">
-                        <i class="menu-icon fa fa-tachometer"></i>
-                        <span class="menu-text"> Claim </span>
-                    </a>
-
-                    <b class="arrow"></b>
-                </li>
-                @{
-                    <li class="">
-                        <a href="#" class="dropdown-toggle">
-                            <i class="menu-icon fa fa-list"></i>
-                            <span class="menu-text"> Report </span>
-
-                            <b class="arrow fa fa-angle-down"></b>
-                        </a>
-
-                        <b class="arrow"></b>
-
-                        <ul class="submenu">
-                            <li class="">
-                                <a href="@Url.Action("Index","Report")">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    All Report
-                                </a>
-
-                                <b class="arrow"></b>
-                            </li>
-
-                            <li class="">
-                                <a href="@Url.Action("ReportByBranch","Report")">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    Report by branch
-                                </a>
-
-                                <b class="arrow"></b>
-                            </li>
-
-                            <li class="">
-                                <a href="@Url.Action("GetTotalOrderOfBranch","Report")">
-                                    <i class="menu-icon fa fa-caret-right"></i>
-                                    Report by employee
-                                </a>
-
-                                <b class="arrow"></b>
-                            </li>
-                        </ul>
-                    </li>
-                            <li class="">
-                                <a href="@Url.Action("Index", "Employees")">
-                                    <i class="menu-icon fa fa-pencil-square-o"></i>
-                                    <span class="menu-text"> Employee </span>
-                                </a>
-
-                                <b class="arrow"></b>
-                            </li>
-                            <li class="">
-                                <a href="@Url.Action("Index", "Branches")">
-                                    <i class="menu-icon fa fa-list-alt"></i>
-                                    <span class="menu-text"> Branch </span>
-                                </a>
-
-                                <b class="arrow"></b>
-                            </li>
-                }
-                }
-                <li class="">
-                    <a href="@Url.Action("Index", "Products")">
-                        <i class="menu-icon fa fa-tag"></i>
-                        <span class="menu-text"> Product </span>
-                    </a>
-
-                    <b class="arrow"></b>
-                </li>
-                <li class="">
-                    <a href="@Url.Action("Index", "Categories")">
-                        <i class="menu-icon fa fa-picture-o"></i>
-                        <span class="menu-text"> Category </span>
-                    </a>
-
-                    <b class="arrow"></b>
-                </li>
-                <li class="">
-                    <a href="@Url.Action("Index", "Customers")">
-                        <i class="menu-icon fa fa-calendar"></i>
-                        <span class="menu-text"> Customer </span>
-                    </a>
-
-                    <b class="arrow"></b>
-                </li>
+                @Html.Partial("_Main_Menu");              
             </ul><!-- /.nav-list -->
 
             <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
@@ -565,8 +472,6 @@
     <!-- basic scripts -->
     <!--[if !IE]> -->
     <script src="~/Content/js/jquery-2.1.4.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
     <!-- <![endif]-->
     <!--[if IE]>
     <script src="~/Content/js/jquery-1.11.3.min.js"></script>
@@ -574,14 +479,12 @@
     <script type="text/javascript">
         if ('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
     </script>
+    <script src="~/Scripts/main.js"></script>
     <script src="~/Content/js/bootstrap.min.js"></script>
 
     <!-- page specific plugin scripts -->
     <!-- ace scripts -->
     <script src="~/Content/js/ace-elements.min.js"></script>
     <script src="~/Content/js/ace.min.js"></script>
-
-    <!-- inline scripts related to this page -->
-    <script src="~/Scripts/main.js"></script>
 </body>
 </html>
