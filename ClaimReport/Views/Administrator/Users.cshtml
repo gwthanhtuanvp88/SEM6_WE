@@ -13,28 +13,22 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.username)
+            User Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.name)
+            Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.email)
+            Email
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.phone)
+            Phone
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.address)
+            Address
         </th>
         <th>
             User Type
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.status)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.active)
         </th>
         <th></th>
     </tr>
@@ -60,14 +54,15 @@
             @Html.DisplayFor(modelItem => item.UserType.name)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.status)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.active)
-        </td>
-        <td>
             @Html.ActionLink("Edit", "EditUser", new { id=item.id }) |
-            @Html.ActionLink("Delete", "DeleteUser", new { id=item.id })
+            @Html.ActionLink("Delete", "DeleteUser", new { id=item.id }, new
+               {
+                   @class = "confirm-delete",
+                   @confirm = "Please Verify Your Informations: "
+                           + "\n" + "Name: " + item.name
+                           + "\n" + "Email: " + item.email
+
+               })
         </td>
     </tr>
 }

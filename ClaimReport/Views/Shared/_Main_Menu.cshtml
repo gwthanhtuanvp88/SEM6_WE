@@ -1,33 +1,37 @@
 ﻿@using ClaimReport.Models
 @{var user = (User)Session["user"];}
-@if (user.UserType.name == "Admin")
+@if (user != null)
 {
-    <li class="">
-        <a href="@Url.Action("Academyyear", "Administrator")">
-            <i class="menu-icon fa fa-calendar"></i>
-            <span class="menu-text"> Academy year </span>
-        </a>
+    if (user.UserType.name == "Admin")
+    {
+        <li class="">
+            <a href="@Url.Action("Academyyear", "Administrator")">
+                <i class="menu-icon fa fa-calendar"></i>
+                <span class="menu-text"> Academy year </span>
+            </a>
 
-        <b class="arrow"></b>
-    </li>
+            <b class="arrow"></b>
+        </li>
 
-    <li class="">
-        <a href="@Url.Action("Users", "Administrator")">
-            <i class="menu-icon fa fa-user"></i>
-            <span class="menu-text"> Users </span>
-        </a>
+        <li class="">
+            <a href="@Url.Action("Users", "Administrator")">
+                <i class="menu-icon fa fa-user"></i>
+                <span class="menu-text"> Users </span>
+            </a>
 
-        <b class="arrow"></b>
-    </li>
+            <b class="arrow"></b>
+        </li>
+    }
+
+    if (user.UserType.name == "Coordinator")
+    {
+        <li class="">
+            <a href="@Url.Action("Index", "Coordinator")">
+                <i class="menu-icon fa fa-user"></i>
+                <span class="menu-text"> Claim </span>
+            </a>
+        </li>
+    }
 }
 
-@if (user.UserType.name == "Coordinator")
-{
-    <li class="">
-        <a href="@Url.Action("Index", "Coordinator")">
-            <i class="menu-icon fa fa-user"></i>
-            <span class="menu-text"> Claim </span>
-        </a>
-    </li>
-}
 
