@@ -21,7 +21,7 @@ namespace ClaimReport.Controllers
             }
 
             var user = (User)Session["user"];
-            var coordinator = db.Coordinators.Single(x => x.userid == user.id);
+            var coordinator = db.Coordinators.FirstOrDefault(x => x.userid == user.id);
             return View(db.Claims.Where(x => x.coordinatorId == coordinator.id).ToList());
         }
 
