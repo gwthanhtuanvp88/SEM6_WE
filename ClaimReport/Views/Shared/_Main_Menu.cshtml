@@ -32,6 +32,16 @@
             </a>
         </li>
     }
+
+    if (user.UserType.name == "Student")
+    {
+        <li class="">
+            <a href="@Url.Action("Index", "Claims")">
+                <i class="menu-icon fa fa-user"></i>
+                <span class="menu-text"> Claim </span>
+            </a>
+        </li>
+    }
 }
 
 

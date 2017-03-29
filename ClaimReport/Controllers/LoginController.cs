@@ -41,7 +41,7 @@ namespace ClaimReport.Controllers
         public ActionResult Logout()
         {
             Session["user"] = null;
-            return RedirectToAction("Index", "Logout");
+            return RedirectToAction("Index");
         }
     }
 }
