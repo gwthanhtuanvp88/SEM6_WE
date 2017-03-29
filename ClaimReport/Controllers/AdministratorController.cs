@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace ClaimReport.Controllers
 {
-    public class AdministratorController : Controller
+    public class AdministratorController : AdminPermissionController
     {
         ReportClaimEntities db = new ReportClaimEntities();
 
@@ -499,7 +499,7 @@ namespace ClaimReport.Controllers
             var coordinator = db.Coordinators.SingleOrDefault(x => x.userid == id);
             if (coordinator != null)
             {
-                ViewBag.FacultySelected = coordinator.facutyid.ToString();
+                ViewBag.CoordinatorSelected = coordinator.facutyid.ToString();
             }
 
             ViewBag.Faculty = db.Faculties.ToList();
@@ -565,7 +565,7 @@ namespace ClaimReport.Controllers
 
             model.password = hash;
 
-            var user = db.Users.SingleOrDefault(x=> x.id == model.id);
+            var user = db.Users.SingleOrDefault(x => x.id == model.id);
 
             user.username = model.username;
             user.name = model.name;
@@ -669,9 +669,10 @@ namespace ClaimReport.Controllers
             }
 
 
-            // Check ordinal
             if (model.startReportDate != null && model.closureReportDate != null && model.closureEvidenceDate != null)
             {
+                // Check ordinal
+
                 DateTime startDate = model.startReportDate.Value;
                 DateTime closureDate = model.closureReportDate.Value;
                 DateTime evidenceDate = model.closureEvidenceDate.Value;
@@ -696,21 +697,20 @@ namespace ClaimReport.Controllers
                     ModelState.AddModelError(String.Empty, "Closure report Date must earlier than Closure Evidence date!");
                     flag = true;
                 }
-            }
 
-            // Check duplicate
-            var duplicate = db.Academyyears.Where(x => x.startReportDate == model.startReportDate && x.closureEvidenceDate == model.closureEvidenceDate && x.closureReportDate == model.closureReportDate).ToList();
-            if (duplicate != null)
-            {
-                ModelState.AddModelError(String.Empty, "This Academy year already exists.");
-                flag = true;
+                // Check duplicate
+                var duplicate = db.Academyyears.Where(x => x.startReportDate == model.startReportDate && x.closureEvidenceDate == model.closureEvidenceDate && x.closureReportDate == model.closureReportDate).ToList();
+                if (duplicate.Count > 0)
+                {
+                    ModelState.AddModelError(String.Empty, "This Academy year already exists.");
+                    flag = true;
+                }
             }
 
             if (flag)
             {
                 return View("CreateAcademyYear");
             }
-
 
             db.Academyyears.Add(model);
             db.SaveChanges();
