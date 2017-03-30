@@ -10,12 +10,20 @@
 <script>
     $(function(){
         $("#addClaim").submit(function () {
-            if ($("#files").val() == null || $("#files").val() == "")
+            var fileName = $("#files").val();
+            if (fileName == null || fileName == "")
             {
                 alert('You must upload evidence with the claim');
                 return false;
             }
-            return true;
+            var ext = fileName.substring(fileName.lastIndexOf('.') + 1);
+            console.log(ext);
+            if (ext == "gif" || ext == "GIF" || ext == "JPEG" || ext == "jpeg" || ext == "jpg" || ext == "JPG" || ext == "png" || ext == "PNG" || ext == "pdf") {
+                return true;
+            } else {
+                alert("Upload images or pdf only");
+                return false;
+            }
         })
     })
 </script>

@@ -47,7 +47,8 @@ namespace ClaimReport.Controllers
         // GET: Claims/Create
         public ActionResult Create()
         {
-            ViewBag.academyyearid = new SelectList(db.Academyyears, "id", "name");
+            ViewBag.academyyearid = new SelectList(db.Academyyears.Where(c=>DateTime.Compare(DateTime.Now, (DateTime)c.startReportDate) > 0   
+                && (DateTime.Compare(DateTime.Now, (DateTime)c.closureReportDate) < 0)), "id", "name");
             return View();
         }
 
@@ -95,6 +96,10 @@ namespace ClaimReport.Controllers
                                 if (DateTime.Compare((DateTime)claim.datesubmited, (DateTime)academy.closureEvidenceDate) < 0)
                                 {
                                     var fileName = Path.GetFileName(file.FileName);
+                                    var myUniqueFileName = string.Format(@"{0}.txt", DateTime.Now.Ticks);
+                                    myUniqueFileName = myUniqueFileName.Substring(0, 8);
+                                    myUniqueFileName = myUniqueFileName.Replace(",", "");
+                                    fileName = myUniqueFileName + fileName;
                                     Evidence e = new Evidence();
                                     e.claimid = claim.id;
                                     e.filename = fileName;
@@ -116,6 +121,9 @@ namespace ClaimReport.Controllers
                                 else
                                 {
                                     ModelState.AddModelError("academyyearid", "The time to upload evidence is end");
+                                    ViewBag.academyyearid = new SelectList(db.Academyyears.Where(c => DateTime.Compare(DateTime.Now, (DateTime)c.startReportDate) > 0
+                && (DateTime.Compare(DateTime.Now, (DateTime)c.closureReportDate) < 0)), "id", "name");
+                                    return View();
                                 }
                             }
                         }
@@ -123,6 +131,9 @@ namespace ClaimReport.Controllers
                     else
                     {
                         ModelState.AddModelError("academyyearid", "The time to upload claim is end");
+                        ViewBag.academyyearid = new SelectList(db.Academyyears.Where(c => DateTime.Compare(DateTime.Now, (DateTime)c.startReportDate) > 0
+                && (DateTime.Compare(DateTime.Now, (DateTime)c.closureReportDate) < 0)), "id", "name");
+                        return View();
                     }
                 }
                 return RedirectToAction("Index");
@@ -165,6 +176,10 @@ namespace ClaimReport.Controllers
                             var fileName = Path.GetFileName(file.FileName);
                             Evidence e = new Evidence();
                             e.claimid = claim.id;
+                            var myUniqueFileName = string.Format(@"{0}.txt", DateTime.Now.Ticks);
+                            myUniqueFileName = myUniqueFileName.Substring(0, 8);
+                            myUniqueFileName = myUniqueFileName.Replace(",", "");
+                            fileName = myUniqueFileName + fileName;
                             e.filename = fileName;
                             e.status = true;
                             e.dateUpload = DateTime.Now;
