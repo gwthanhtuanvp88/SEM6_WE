@@ -1,4 +1,5 @@
 ﻿using ClaimReport.Models;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -392,9 +393,12 @@ namespace ClaimReport.Controllers
         // User
         // ======================================
 
-        public ActionResult Users()
+        public ActionResult Users(int? page)
         {
-            return View(db.Users.ToList());
+            if (page == null) { page = 1; }
+            var lstUser = db.Users.Where(x => x.status == true).OrderByDescending(x => x.id);
+            IPagedList<User> Users = lstUser.ToPagedList((int)page, 5);
+            return View(Users);
         }
 
         public ActionResult CreateUser()
@@ -405,7 +409,7 @@ namespace ClaimReport.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateUser(User model, int facultyId, string pass)
+        public ActionResult CreateUser(UserModel model)
         {
             ViewBag.Faculty = db.Faculties.ToList();
             ViewBag.UserType = db.UserTypes.ToList();
@@ -417,23 +421,16 @@ namespace ClaimReport.Controllers
 
             var flag = false;
 
-            if (String.IsNullOrEmpty(model.username))
+            var userType = db.UserTypes.SingleOrDefault(x => x.id == model.usertypeid);
+            if (userType.name == "Student" || userType.name == "Coordinator")
             {
-                ModelState.AddModelError("username", "User Name is required!");
-                flag = true;
+                if (String.IsNullOrEmpty(model.facultyId))
+                {
+                    ModelState.AddModelError("facultyId", "You must select faculty when user is Student or Coordinator.");
+                    flag = true;
+                }
             }
 
-            if (String.IsNullOrEmpty(pass))
-            {
-                ModelState.AddModelError("password", "Password is required!");
-                flag = true;
-            }
-
-            if (String.IsNullOrEmpty(model.email))
-            {
-                ModelState.AddModelError("email", "Email is required!");
-                flag = true;
-            }
 
             if (db.Users.Where(x => x.username == model.username).ToList().Count > 0)
             {
@@ -455,31 +452,39 @@ namespace ClaimReport.Controllers
             byte[] hash;
             using (MD5 md5 = MD5.Create())
             {
-                hash = md5.ComputeHash(Encoding.UTF8.GetBytes(pass.ToString()));
+                hash = md5.ComputeHash(Encoding.UTF8.GetBytes(model.password.ToString()));
             }
 
-            model.password = hash;
-            model.status = true;
-            model.active = false;
-            var user = db.Users.Add(model);
+            User user = new User();
+            user.username = model.username;
+            user.password = hash;
+            user.name = model.name;
+            user.email = model.email;
+            user.phone = model.phone;
+            user.address = model.address;
+            user.usertypeid = model.usertypeid;
+            user.status = true;
+            user.active = false;
+
+            var addResult = db.Users.Add(user);
 
             var usertype = db.UserTypes.SingleOrDefault(x => x.id == model.usertypeid);
 
             if (usertype.name == "Student")
             {
                 Student st = new Student();
-                st.facultyid = facultyId;
+                st.facultyid = Convert.ToInt32(model.facultyId);
                 st.userid = user.id;
-                st.status = model.status;
+                st.status = true;
                 db.Students.Add(st);
             }
 
             if (usertype.name == "Coordinator")
             {
                 Coordinator co = new Coordinator();
-                co.facutyid = facultyId;
+                co.facutyid = Convert.ToInt32(model.facultyId);
                 co.userid = user.id;
-                co.status = model.status;
+                co.status = true;
                 db.Coordinators.Add(co);
             }
 
@@ -504,38 +509,41 @@ namespace ClaimReport.Controllers
 
             ViewBag.Faculty = db.Faculties.ToList();
             ViewBag.UserType = db.UserTypes.ToList();
-            return View(db.Users.SingleOrDefault(x => x.id == id));
+
+            User user = db.Users.SingleOrDefault(x => x.id == id);
+            UserModel um = new UserModel();
+            um.id = user.id;
+            um.username = user.username;
+            um.name = user.name;
+            um.email = user.email;
+            um.phone = user.phone;
+            um.address = user.address;
+            um.usertypeid = user.usertypeid;
+
+            return View(um);
         }
 
         [HttpPost]
-        public ActionResult EditUser(User model, int facultyId, string pass)
+        public ActionResult EditUser(UserModel model)
         {
             ViewBag.Faculty = db.Faculties.ToList();
             ViewBag.UserType = db.UserTypes.ToList();
 
             if (!ModelState.IsValid)
             {
-                return View("EditUser");
+                return View("CreateUser");
             }
 
             var flag = false;
 
-            if (String.IsNullOrEmpty(model.username))
+            var userType = db.UserTypes.SingleOrDefault(x => x.id == model.usertypeid);
+            if (userType.name == "Student" || userType.name == "Coordinator")
             {
-                ModelState.AddModelError("username", "User Name is required!");
-                flag = true;
-            }
-
-            if (String.IsNullOrEmpty(pass))
-            {
-                ModelState.AddModelError("password", "Password is required!");
-                flag = true;
-            }
-
-            if (String.IsNullOrEmpty(model.email))
-            {
-                ModelState.AddModelError("email", "Email is required!");
-                flag = true;
+                if (String.IsNullOrEmpty(model.facultyId))
+                {
+                    ModelState.AddModelError("facultyId", "You must select faculty when user is Student or Coordinator.");
+                    flag = true;
+                }
             }
 
             var userNameDuplicate = db.Users.SingleOrDefault(x => x.username == model.username);
@@ -560,10 +568,8 @@ namespace ClaimReport.Controllers
             byte[] hash;
             using (MD5 md5 = MD5.Create())
             {
-                hash = md5.ComputeHash(Encoding.UTF8.GetBytes(pass));
+                hash = md5.ComputeHash(Encoding.UTF8.GetBytes(model.password.ToString()));
             }
-
-            model.password = hash;
 
             var user = db.Users.SingleOrDefault(x => x.id == model.id);
 
@@ -579,20 +585,14 @@ namespace ClaimReport.Controllers
 
             if (usertype.name == "Student")
             {
-                Student st = new Student();
-                st.facultyid = facultyId;
-                st.userid = user.id;
-                st.status = model.status;
-                db.Students.Add(st);
+                var student = db.Students.SingleOrDefault(x => x.userid == model.id);
+                student.facultyid = Convert.ToInt32(model.facultyId);
             }
 
             if (usertype.name == "Coordinator")
             {
-                Coordinator co = new Coordinator();
-                co.facutyid = facultyId;
-                co.userid = user.id;
-                co.status = model.status;
-                db.Coordinators.Add(co);
+                var coordinator = db.Coordinators.SingleOrDefault(x => x.userid == model.id);
+                coordinator.facutyid = Convert.ToInt32(model.facultyId);
             }
 
             db.SaveChanges();
@@ -629,9 +629,12 @@ namespace ClaimReport.Controllers
         // Academyyear
         // ======================================
 
-        public ActionResult Academyyear()
+        public ActionResult Academyyear(int? page)
         {
-            return View(db.Academyyears.ToList());
+            if (page == null) { page = 1; }
+            var lstAcademyYear = db.Academyyears.Where(x => x.status == true).OrderByDescending(x => x.id);
+            IPagedList<Academyyear> Academyyear = lstAcademyYear.ToPagedList((int)page, 5);
+            return View(Academyyear);
         }
 
         public ActionResult CreateAcademyYear()
@@ -640,7 +643,7 @@ namespace ClaimReport.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateAcademyYear(Academyyear model)
+        public ActionResult CreateAcademyYear(AcademyYearModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -649,62 +652,38 @@ namespace ClaimReport.Controllers
 
             var flag = false;
 
-            // Check null
-            if (model.startReportDate == null)
+            // Check ordinal
+            DateTime startDate = model.startReportDate;
+            DateTime closureDate = model.closureReportDate;
+            DateTime evidenceDate = model.closureEvidenceDate;
+            int startClosureDateResult = DateTime.Compare(startDate, closureDate);
+            int startEvidenceDateResult = DateTime.Compare(startDate, evidenceDate);
+            int closureEvidenceDateResult = DateTime.Compare(closureDate, evidenceDate);
+
+            if (startClosureDateResult > 0)
             {
-                ModelState.AddModelError("startReportDate", "Start Report Date is required!");
+                ModelState.AddModelError(String.Empty, "Start report Date must earlier than Closure report date!");
                 flag = true;
             }
 
-            if (model.closureReportDate == null)
+            if (startEvidenceDateResult > 0)
             {
-                ModelState.AddModelError("closureReportDate", "Closure Report Date is required!");
+                ModelState.AddModelError(String.Empty, "Start report Date must earlier than Closure Evidence date!");
                 flag = true;
             }
 
-            if (model.closureEvidenceDate == null)
+            if (closureEvidenceDateResult > 0)
             {
-                ModelState.AddModelError("closureEvidenceDate", "Closure Evidence Date is required!");
+                ModelState.AddModelError(String.Empty, "Closure report Date must earlier than Closure Evidence date!");
                 flag = true;
             }
 
-
-            if (model.startReportDate != null && model.closureReportDate != null && model.closureEvidenceDate != null)
+            // Check duplicate
+            var duplicate = db.Academyyears.Where(x => x.name == model.Name && x.startReportDate == model.startReportDate && x.closureEvidenceDate == model.closureEvidenceDate && x.closureReportDate == model.closureReportDate).ToList();
+            if (duplicate.Count > 0)
             {
-                // Check ordinal
-
-                DateTime startDate = model.startReportDate.Value;
-                DateTime closureDate = model.closureReportDate.Value;
-                DateTime evidenceDate = model.closureEvidenceDate.Value;
-                int startClosureDateResult = DateTime.Compare(startDate, closureDate);
-                int startEvidenceDateResult = DateTime.Compare(startDate, evidenceDate);
-                int closureEvidenceDateResult = DateTime.Compare(closureDate, evidenceDate);
-
-                if (startClosureDateResult > 0)
-                {
-                    ModelState.AddModelError(String.Empty, "Start report Date must earlier than Closure report date!");
-                    flag = true;
-                }
-
-                if (startEvidenceDateResult > 0)
-                {
-                    ModelState.AddModelError(String.Empty, "Start report Date must earlier than Closure Evidence date!");
-                    flag = true;
-                }
-
-                if (closureEvidenceDateResult > 0)
-                {
-                    ModelState.AddModelError(String.Empty, "Closure report Date must earlier than Closure Evidence date!");
-                    flag = true;
-                }
-
-                // Check duplicate
-                var duplicate = db.Academyyears.Where(x => x.startReportDate == model.startReportDate && x.closureEvidenceDate == model.closureEvidenceDate && x.closureReportDate == model.closureReportDate).ToList();
-                if (duplicate.Count > 0)
-                {
-                    ModelState.AddModelError(String.Empty, "This Academy year already exists.");
-                    flag = true;
-                }
+                ModelState.AddModelError(String.Empty, "This Academy year already exists.");
+                flag = true;
             }
 
             if (flag)
@@ -712,7 +691,14 @@ namespace ClaimReport.Controllers
                 return View("CreateAcademyYear");
             }
 
-            db.Academyyears.Add(model);
+            Academyyear ay = new Academyyear();
+            ay.name = model.Name;
+            ay.startReportDate = model.startReportDate;
+            ay.closureReportDate = model.closureReportDate;
+            ay.closureEvidenceDate = model.closureEvidenceDate;
+            ay.status = true;
+
+            db.Academyyears.Add(ay);
             db.SaveChanges();
 
             return RedirectToAction("Academyyear");
@@ -720,11 +706,19 @@ namespace ClaimReport.Controllers
 
         public ActionResult EditAcademyYear(int id)
         {
-            return View(db.Academyyears.SingleOrDefault(x => x.id == id));
+            AcademyYearModel aym = new AcademyYearModel();
+            Academyyear ay = db.Academyyears.SingleOrDefault(x => x.id == id);
+            aym.id = ay.id;
+            aym.Name = ay.name;
+            aym.startReportDate = Convert.ToDateTime(ay.startReportDate);
+            aym.closureReportDate = Convert.ToDateTime(ay.closureReportDate);
+            aym.closureEvidenceDate = Convert.ToDateTime(ay.closureEvidenceDate);
+
+            return View(aym);
         }
 
         [HttpPost]
-        public ActionResult EditAcademyYear(Academyyear model)
+        public ActionResult EditAcademyYear(AcademyYearModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -733,50 +727,38 @@ namespace ClaimReport.Controllers
 
             var flag = false;
 
-            if (model.startReportDate == null)
+
+            DateTime startDate = model.startReportDate;
+            DateTime closureDate = model.closureReportDate;
+            DateTime evidenceDate = model.closureEvidenceDate;
+            int startClosureDateResult = DateTime.Compare(startDate, closureDate);
+            int startEvidenceDateResult = DateTime.Compare(startDate, evidenceDate);
+            int closureEvidenceDateResult = DateTime.Compare(closureDate, evidenceDate);
+
+            if (startClosureDateResult > 0)
             {
-                ModelState.AddModelError("startReportDate", "Start Report Date is required!");
+                ModelState.AddModelError(String.Empty, "Start report Date must earlier than Closure report date!");
                 flag = true;
             }
 
-            if (model.closureReportDate == null)
+            if (startEvidenceDateResult > 0)
             {
-                ModelState.AddModelError("closureReportDate", "Closure Report Date is required!");
+                ModelState.AddModelError(String.Empty, "Start report Date must earlier than Closure Evidence date!");
                 flag = true;
             }
 
-            if (model.closureEvidenceDate == null)
+            if (closureEvidenceDateResult > 0)
             {
-                ModelState.AddModelError("closureEvidenceDate", "Closure Evidence Date is required!");
+                ModelState.AddModelError(String.Empty, "Closure report Date must earlier than Closure Evidence date!");
                 flag = true;
             }
 
-            if (model.startReportDate != null && model.closureReportDate != null && model.closureEvidenceDate != null)
+            // Check duplicate
+            Academyyear duplicate = db.Academyyears.SingleOrDefault(x => x.name == model.Name && x.startReportDate == model.startReportDate && x.closureEvidenceDate == model.closureEvidenceDate && x.closureReportDate == model.closureReportDate);
+            if (duplicate != null && duplicate.id != model.id)
             {
-                DateTime startDate = model.startReportDate.Value;
-                DateTime closureDate = model.closureReportDate.Value;
-                DateTime evidenceDate = model.closureEvidenceDate.Value;
-                int startClosureDateResult = DateTime.Compare(startDate, closureDate);
-                int startEvidenceDateResult = DateTime.Compare(startDate, evidenceDate);
-                int closureEvidenceDateResult = DateTime.Compare(closureDate, evidenceDate);
-
-                if (startClosureDateResult > 0)
-                {
-                    ModelState.AddModelError(String.Empty, "Start report Date must earlier than Closure report date!");
-                    flag = true;
-                }
-
-                if (startEvidenceDateResult > 0)
-                {
-                    ModelState.AddModelError(String.Empty, "Start report Date must earlier than Closure Evidence date!");
-                    flag = true;
-                }
-
-                if (closureEvidenceDateResult > 0)
-                {
-                    ModelState.AddModelError(String.Empty, "Closure report Date must earlier than Closure Evidence date!");
-                    flag = true;
-                }
+                ModelState.AddModelError(String.Empty, "This Academy year already exists.");
+                flag = true;
             }
 
             if (flag)
@@ -786,10 +768,10 @@ namespace ClaimReport.Controllers
 
 
             var academyyear = db.Academyyears.SingleOrDefault(x => x.id == model.id);
+            academyyear.name = model.Name;
             academyyear.startReportDate = model.startReportDate;
             academyyear.closureReportDate = model.closureReportDate;
             academyyear.closureEvidenceDate = model.closureEvidenceDate;
-            academyyear.status = model.status;
             db.SaveChanges();
 
             return RedirectToAction("Academyyear");

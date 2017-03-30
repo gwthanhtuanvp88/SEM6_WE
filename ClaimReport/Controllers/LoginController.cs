@@ -22,7 +22,7 @@ namespace ClaimReport.Controllers
         public ActionResult CheckLogin(String username, String password)
         {
             byte[] hash;
-            
+
             using (MD5 md5 = MD5.Create())
             {
                 hash = md5.ComputeHash(Encoding.UTF8.GetBytes(password));
@@ -32,7 +32,23 @@ namespace ClaimReport.Controllers
             {
                 Session["user"] = user;
                 ViewBag.strErrorMessage = "Username an password are incorrect";
-                return RedirectToAction("Index", "Home");
+                if (user.UserType.name == "Admin")
+                {
+                    return RedirectToAction("Users", "Administrator");
+                }
+                else if (user.UserType.name == "Manager")
+                {
+                    return RedirectToAction("Index", "Manager");
+                }
+                else if (user.UserType.name == "Coordinator")
+                {
+                    return RedirectToAction("Index", "Coordinator");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Claims");
+                }
+
             }
             TempData["login"] = "fail";
             return RedirectToAction("Index", "Login");

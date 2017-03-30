@@ -1,70 +1,73 @@
-﻿@model IEnumerable<ClaimReport.Models.Claim>
+﻿@using PagedList.Mvc;
+@model PagedList.PagedList<ClaimReport.Models.Claim>
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Claim</h2>
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayName("Name")
+            </th>
+            <th>
+                @Html.DisplayName("Description")
+            </th>
+            <th>
+                @Html.DisplayName("Student Name")
+            </th>
+            <th>
+                @Html.DisplayName("Academy Year")
+            </th>
+            <th>
+                @Html.DisplayName("Result")
+            </th>
+            <th></th>
+        </tr>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.studentid)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.academyyearid)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.coordinatorId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.result)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.status)
-        </th>
-        <th></th>
-    </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student.User.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Academyyear.name)
+                </td>
+                <td>
+                    @{
+                        if (item.result == 2)
+                        {
+                            @Html.DisplayName("Rejected") 
+                        }
+                        else if (item.result == 1)
+                        {
+                            @Html.DisplayName("Accepted")
+                        }
+                        else
+                        {
+                            @Html.DisplayName("Not process yet")
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.id })
+                </td>
+            </tr>
+        }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.studentid)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.academyyearid)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.coordinatorId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.result)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.status)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.id })
-        </td>
-    </tr>
-}
+    </table>
+</div>
 
-</table>
+<div id='paging'>
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+</div>

@@ -1,6 +1,8 @@
 ﻿using ClaimReport.Models;
+using PagedList;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -9,12 +11,12 @@ using System.Web.Mvc;
 
 namespace ClaimReport.Controllers
 {
-    public class CoordinatorController : Controller
+    public class CoordinatorController : CoordinatorPermissionController
     {
         private ReportClaimEntities db = new ReportClaimEntities();
 
         // GET: Coordinator
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
             if (Session["user"] == null)
             {
@@ -23,27 +25,31 @@ namespace ClaimReport.Controllers
 
             var user = (User)Session["user"];
             var coordinator = db.Coordinators.FirstOrDefault(x => x.userid == user.id);
-            return View(db.Claims.Where(x => x.coordinatorId == coordinator.id).ToList());
+
+            if (page == null) { page = 1;} 
+            var lstClaim = db.Claims.Where(c => c.status == true && c.coordinatorId == coordinator.id).Include(c => c.Academyyear).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
+            IPagedList<Claim> claims = lstClaim.ToPagedList((int)page, 5);
+            return View(claims);
         }
 
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+        //public ActionResult Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
 
-            Claim claim = db.Claims.Find(id);
+        //    Claim claim = db.Claims.Find(id);
 
-            if (claim == null)
-            {
-                return HttpNotFound();
-            }
+        //    if (claim == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
 
-            ViewBag.evidence = db.Evidences.Where(x => x.claimid == id).ToList();
+        //    ViewBag.evidence = db.Evidences.Where(x => x.claimid == id).ToList();
 
-            return View(claim);
-        }
+        //    return View(claim);
+        //}
 
         public ActionResult Edit(int? id)
         {
@@ -57,7 +63,7 @@ namespace ClaimReport.Controllers
                 return HttpNotFound();
             }
             List<Evidence> lstEvidence = db.Evidences.Where(e => e.claimid == claim.id && e.status == true).ToList();
-            if(lstEvidence.Count == 0)
+            if (lstEvidence.Count == 0)
             {
                 ViewBag.result = "No evidence to process this claim";
             }
@@ -73,10 +79,9 @@ namespace ClaimReport.Controllers
         [HttpPost]
         public ActionResult Edit(int id, bool result)
         {
-
             String strResult = "";
             Claim claim = db.Claims.FirstOrDefault(c => c.id == id);
-            
+
 
             if (result)
             {

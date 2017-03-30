@@ -5,121 +5,110 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<Evidence> lstEvidence = ViewBag.lstEvidence;
     string result = ViewBag.result;
-    bool bReject = false;
-    bool bAccept = false;
 }
 
-<h2>Edit claim</h2>
+<h1 class="text-capitalize">@Html.DisplayFor(model => model.name)</h1>
 
-<div>
-    <h4>Claim Information</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.description)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.description)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.result)
-        </dt>
-
-        <dd>
-            @{
-                if (Model.result == 2)
+<div class="row">
+    <div class="col-md-6 col-md-push-6">
+        @{
+            if (result == null || result.IsEmpty() == true)
+            {
+                using (Html.BeginForm("Edit", "Coordinator", FormMethod.Post))
                 {
-                    <b>Rejected</b>
-                    bReject = true;
-                    bAccept = false;
-                }
-                else if (Model.result == 1)
-                {
-                    <b>Accepted</b>
-                    bReject = false;
-                    bAccept = true;
-                }
-                else
-                {
-                    <b>Not process yet</b>
+                    <input type="hidden" name="id" value="@Model.id" />
+                    <div class="row">
+                        <div class="col-xs-8 col-md-6">
+                            @{
+                                List<SelectListItem> listItems = new List<SelectListItem>();
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "Accept",
+                                    Value = "true"
+                                });
+                                listItems.Add(new SelectListItem
+                                {
+                                    Text = "Reject",
+                                    Value = "false"
+                                });
+                            }
+                            @Html.DropDownList("result", new SelectList(listItems, "Value", "Text", Model.result), new { @class = "form-control" })
+                        </div>
+                        <div class="col-xs-4 col-md-6">
+                            <input type="submit" id="btnSubmit" value="Save" class="btn btn-default btn-block btn-sm" />
+                        </div>
+                    </div>
                 }
             }
-        </dd>
+            else
+            {
+                <b class="lead">@result</b>
+                <br />
+            }
+        }
 
-        <dt>
-            @Html.DisplayName("Academy name")
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Academyyear.name)
-        </dd>
+        <br>
+        <div class="row">
+            <div class="col-md-6">
+                <span>Student Name:</span>
+                @Html.DisplayFor(model => model.Student.User.name)
+                <br>
+                <span>Student ID:</span>
+                @Html.DisplayFor(model => model.studentid)
 
-        <dt>
-            @Html.DisplayName("Coordinator name")
-        </dt>
+                <br>
 
-        <dd>
-            @Html.DisplayFor(model => model.Coordinator.User.name)
-        </dd>
+                <span>Faculty:</span>
+                @Html.DisplayFor(model => model.Student.Faculty.name)
+
+                <br><br>
+            </div>
+
+            <div class="col-md-6">
+                <span>Academy Year: </span>
+                @Html.DisplayFor(model => model.Academyyear.name)
+
+                <br />
+
+                <span>Start Report Date:</span>
+                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Academyyear.startReportDate))
+
+                <br>
+
+                <span>Closure Report Date:</span>
+                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Academyyear.closureEvidenceDate))
+
+                <br>
+
+                <span>Closure Evedence Date:</span>
+                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Academyyear.closureEvidenceDate))
+
+                <br><br>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-md-pull-6">
+        @Html.DisplayFor(model => model.description)
+        <hr>
+
         @if (lstEvidence != null && lstEvidence.Count > 0)
         {
-            <dt>
-                <span>Upload Evidence</span>
-            </dt>
-            <dd>
-                <table style="border-spacing: 10px;border-collapse: separate">
-                    @foreach (var item in lstEvidence)
-                    {
-                        <tr>
-                            <th>
-                                @item.filename
-                            </th>
-                            <td>
-                                @Html.ActionLink("Download", "Download", new { ImageName = item.filename })
-                            </td>
-                        </tr>
-                    }
-                </table>
-            </dd>
+            <table style="border-spacing: 10px;border-collapse: separate">
+                @foreach (var item in lstEvidence)
+                {
+                    <tr>
+                        <th>
+                            @item.filename
+                        </th>
+                        <td>
+                            @Html.ActionLink("Download", "Download", new { ImageName = item.filename })
+                        </td>
+                    </tr>
+                }
+            </table>
         }
-    </dl>
-    @{
-        if (result == null || result.IsEmpty() == true)
-        {
-            using (Html.BeginForm("Edit", "Coordinator", FormMethod.Post))
-            {
-                <input type="hidden" name="id" value="@Model.id" />
-                <div class="form-group">
-                    @Html.Label("Result", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.RadioButton("result", true, bAccept) Accept
-                        @Html.RadioButton("result", false, bReject) Reject
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" id="btnSubmit" value="Create" class="btn btn-default" />
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <b>@result</b>
-        }
-    }
-
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+

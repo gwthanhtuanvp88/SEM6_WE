@@ -1,4 +1,5 @@
 ﻿using ClaimReport.Models;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +9,17 @@ using System.Web.Mvc;
 
 namespace ClaimReport.Controllers
 {
-    public class ManagerController : Controller
+    public class ManagerController : ManagerPermissionControllerController
     {
         private ReportClaimEntities db = new ReportClaimEntities();
 
         // GET: Manager
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            return View(db.Claims.ToList());
+            if (page == null) { page = 1; }
+            var lstClaim = db.Claims.Where(c => c.status == true).OrderByDescending(c => c.datesubmited);
+            IPagedList<Claim> claims = lstClaim.ToPagedList((int)page, 5);
+            return View(claims);
         }
 
         public ActionResult Details(int? id)
@@ -24,16 +28,22 @@ namespace ClaimReport.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
             Claim claim = db.Claims.Find(id);
-
             if (claim == null)
             {
                 return HttpNotFound();
             }
-
-            ViewBag.evidence = db.Evidences.Where(x => x.claimid == id).ToList();
-
+            List<Evidence> lstEvidence = db.Evidences.Where(e => e.claimid == claim.id && e.status == true).ToList();
+            if (lstEvidence.Count == 0)
+            {
+                ViewBag.result = "No evidence to process this claim";
+            }
+            ViewBag.lstEvidence = lstEvidence;
+            DateTime submited = (DateTime)claim.datesubmited;
+            if (DateTime.Compare(DateTime.Now, submited.AddDays(15)) > 0)
+            {
+                ViewBag.result = "The claim is out of 14 days since claim upload date " + submited.ToShortDateString();
+            }
             return View(claim);
         }
     }

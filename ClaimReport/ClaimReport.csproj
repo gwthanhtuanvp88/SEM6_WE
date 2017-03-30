@@ -169,10 +169,12 @@
     <Compile Include="Controllers\AdministratorController.cs" />
     <Compile Include="Controllers\AdminPermissionController.cs" />
     <Compile Include="Controllers\CoordinatorController.cs" />
+    <Compile Include="Controllers\CoordinatorPermissionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManagerController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ClaimsController.cs" />
+    <Compile Include="Controllers\ManagerPermissionControllerController.cs" />
     <Compile Include="Controllers\UserTypesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -216,6 +218,7 @@
     <Compile Include="Models\User.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\AdminModel.cs" />
     <Compile Include="Models\UserRole.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
@@ -293,7 +296,6 @@
     <Content Include="Views\Claims\Details.cshtml" />
     <Content Include="Views\Claims\AddEvidence.cshtml" />
     <Content Include="Views\Claims\Index.cshtml" />
-    <Content Include="Views\Manager\index.cshtml" />
     <Content Include="Views\Administrator\Role.cshtml" />
     <Content Include="Views\Administrator\CreateRole.cshtml" />
     <Content Include="Views\Administrator\EditRole.cshtml" />
@@ -315,8 +317,8 @@
     <Content Include="Views\Coordinator\Index.cshtml" />
     <Content Include="Views\Shared\_Main_Menu.cshtml" />
     <Content Include="Views\Shared\_breadcrumbs.cshtml" />
-    <Content Include="Views\Administrator\Index.cshtml" />
     <Content Include="Views\Coordinator\Edit.cshtml" />
+    <Content Include="Views\Shared\_Sidebar_shortcuts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

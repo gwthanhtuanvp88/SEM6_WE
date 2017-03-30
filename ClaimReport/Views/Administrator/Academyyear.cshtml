@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ClaimReport.Models.Academyyear>
+﻿@using PagedList.Mvc;
+@model PagedList.PagedList<ClaimReport.Models.Academyyear>
 
 @{
     ViewBag.Title = "Academyyear";
@@ -14,13 +15,16 @@
     <table class="table">
         <tr>
             <th>
-                Start Report Date
+                @Html.DisplayName("Name")
             </th>
             <th>
-                Closure Report Date
+                @Html.DisplayName("Start Report Date") 
             </th>
             <th>
-                Closure Evidence Date
+                @Html.DisplayName("Closure Report Date")
+            </th>
+            <th>
+                @Html.DisplayName("Closure Evidence Date")
             </th>
             <th></th>
         </tr>
@@ -29,13 +33,16 @@
         {
             <tr>
                 <td>
-                    @Convert.ToDateTime(item.startReportDate).ToString("dd/MM/yyyy")
+                    @Html.DisplayFor(modelitem => item.name)
                 </td>
                 <td>
-                    @Convert.ToDateTime(item.closureReportDate).ToString("dd/MM/yyyy")
+                    @Convert.ToDateTime(item.startReportDate).ToString("MM/dd//yyy")
                 </td>
                 <td>
-                    @Convert.ToDateTime(item.closureEvidenceDate).ToString("dd/MM/yyyy")
+                    @Convert.ToDateTime(item.closureReportDate).ToString("MM/dd//yyy")
+                </td>
+                <td>
+                    @Convert.ToDateTime(item.closureEvidenceDate).ToString("MM/dd//yyy")
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "EditAcademyYear", new { id = item.id }) |
@@ -43,13 +50,18 @@
                {
                    @class = "confirm-delete",
                    @confirm = "Please Verify Your Informations: "
-                   + "\n" + "Start Report Date: " + @Convert.ToDateTime(item.startReportDate).ToString("dd/MM/yyyy")
-                   + "\n" + "Closure Report Date: " + @Convert.ToDateTime(item.closureReportDate).ToString("dd/MM/yyyy")
-                   + "\n" + "Closure Evidence Date: " + @Convert.ToDateTime(item.closureEvidenceDate).ToString("dd/MM/yyyy")
+                   + "\n" + "Name: " + item.name
+                   + "\n" + "Start Report Date: " + @Convert.ToDateTime(item.startReportDate).ToString("MM/dd//yyy")
+                   + "\n" + "Closure Report Date: " + @Convert.ToDateTime(item.closureReportDate).ToString("MM/dd//yyy")
+                   + "\n" + "Closure Evidence Date: " + @Convert.ToDateTime(item.closureEvidenceDate).ToString("MM/dd//yyy")
                })
                 </td>
             </tr>
         }
 
     </table>
+</div>
+
+<div id='paging'>
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
 </div>

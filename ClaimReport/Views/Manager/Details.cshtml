@@ -1,71 +1,97 @@
-﻿@model ClaimReport.Models.Claim
-
+﻿@using ClaimReport.Models;
+@model ClaimReport.Models.Claim
 @{
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<Evidence> lstEvidence = ViewBag.lstEvidence;
+    string result = ViewBag.result;
 }
 
 <h1 class="text-capitalize">@Html.DisplayFor(model => model.name)</h1>
+
 <div class="row">
-    <div class="col-md-4 col-md-push-8">
-        <strong>Result:</strong>
-        @if (@ViewBag.claimResult != null)
-        {
-            @ViewBag.claimResult[0].description
-        }
-        else
-        {
-            <span>Not respond</span>
-        }
-
+    <div class="col-md-6 col-md-push-6">
+        <b class="lead">
+            @if (result == null || result.IsEmpty() == true)
+            {
+                if (Model.result == 2)
+                {
+                    @Html.DisplayName("Rejected")
+                }
+                else if (Model.result == 1)
+                {
+                    @Html.DisplayName("Accepted")
+                }
+                else
+                {
+                    @Html.DisplayName("Not process yet")
+                }
+            }
+            else
+            {
+                @Html.DisplayName(result)
+            }
+        </b>
+        
         <br><br>
+        <div class="row">
+            <div class="col-md-6">
+                <span>Student Name:</span>
+                @Html.DisplayFor(model => model.Student.User.name)
+                <br>
+                <span>Student ID:</span>
+                @Html.DisplayFor(model => model.studentid)
 
-        <strong>Student Name:</strong>
-        @Html.DisplayFor(model => model.Student.User.name)
-        <br>
-        <strong>Student ID:</strong>
-        @Html.DisplayFor(model => model.studentid)
+                <br>
 
-        <br><br>
+                <span>Faculty:</span>
+                @Html.DisplayFor(model => model.Student.Faculty.name)
 
-        <strong>Faculty:</strong>
-        @Html.DisplayFor(model => model.Student.Faculty.name)
+                <br><br>
+            </div>
 
-        <br>
+            <div class="col-md-6">
+                <span>Academy Year: </span>
+                @Html.DisplayFor(model => model.Academyyear.name)
 
-        <strong>Coordinator:</strong>
-        @if (@ViewBag.claimResult != null)
-        {
-            @ViewBag.claimResult[0].Coordinator.name
-            <br><br>
-        }
+                <br />
 
+                <span>Start Report Date:</span>
+                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Academyyear.startReportDate))
 
-        <strong>Start Report Date:</strong>
-        @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Academyyear.startReportDate))
+                <br>
 
-        <br>
+                <span>Closure Report Date:</span>
+                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Academyyear.closureEvidenceDate))
 
-        <strong>Closure Report Date:</strong>
-        @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Academyyear.closureEvidenceDate))
+                <br>
 
-        <br>
+                <span>Closure Evedence Date:</span>
+                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Academyyear.closureEvidenceDate))
 
-        <strong>Closure Evedence Date:</strong>
-        @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Academyyear.closureEvidenceDate))
-
-
+                <br><br>
+            </div>
+        </div>
     </div>
-    <div class="col-md-8 col-md-pull-4">
+    <div class="col-md-6 col-md-pull-6">
         @Html.DisplayFor(model => model.description)
         <hr>
 
-        @if(ViewBag.evidence != null) {
-            foreach (var item in ViewBag.evidence)
-            {
-                <a href="@Request.Url.GetLeftPart(UriPartial.Authority)/Evidence/@item.filename" target="_blank">@item.filename</a> 
-                <br>
-            }
+        @if (lstEvidence != null && lstEvidence.Count > 0)
+        {
+            <table style="border-spacing: 10px;border-collapse: separate">
+                @foreach (var item in lstEvidence)
+                {
+                    <tr>
+                        <th>
+                            @item.filename
+                        </th>
+                        <td>
+                            @Html.ActionLink("Download", "Download", new { ImageName = item.filename })
+                        </td>
+                    </tr>
+                }
+            </table>
         }
     </div>
 </div>

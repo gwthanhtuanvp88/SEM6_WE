@@ -27,9 +27,35 @@
     {
         <li class="">
             <a href="@Url.Action("Index", "Coordinator")">
-                <i class="menu-icon fa fa-user"></i>
+                <i class="menu-icon fa fa-list"></i>
                 <span class="menu-text"> Claim </span>
             </a>
+        </li>
+    }
+
+    if (user.UserType.name == "Manager")
+    {
+        <li class="">
+            <a href="@Url.Action("Index", "Manager")">
+                <i class="menu-icon fa fa-list"></i>
+                <span class="menu-text"> Claims </span>
+            </a>
+        </li>
+
+        <li class="">
+            <a href="#" class="dropdown-toggle">
+                <i class="menu-icon fa fa-area-chart"></i>
+                <span class="menu-text"> Reports </span>
+                <b class="arrow fa fa-angle-down"></b>  
+            </a>
+            <ul class="submenu">
+                <li>
+                    <a href="@Url.Action("DailyReport", "Manager")">Daily</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("SummarizeReport", "Manager")">Summarize</a>
+                </li>
+            </ul>
         </li>
     }
 
@@ -37,7 +63,7 @@
     {
         <li class="">
             <a href="@Url.Action("Index", "Claims")">
-                <i class="menu-icon fa fa-user"></i>
+                <i class="menu-icon fa fa-list"></i>
                 <span class="menu-text"> Claim </span>
             </a>
         </li>

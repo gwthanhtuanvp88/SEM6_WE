@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ClaimReport.Models.User>
+﻿@using PagedList.Mvc;
+@model PagedList.PagedList<ClaimReport.Models.User>
 
 @{
     ViewBag.Title = "Users";
@@ -10,61 +11,68 @@
 <p>
     @Html.ActionLink("Create New", "CreateUser")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            User Name
-        </th>
-        <th>
-            Name
-        </th>
-        <th>
-            Email
-        </th>
-        <th>
-            Phone
-        </th>
-        <th>
-            Address
-        </th>
-        <th>
-            User Type
-        </th>
-        <th></th>
-    </tr>
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th>
+                User Name
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Phone
+            </th>
+            <th>
+                Address
+            </th>
+            <th>
+                User Type
+            </th>
+            <th></th>
+        </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.username)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.phone)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.address)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserType.name)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "EditUser", new { id=item.id }) |
-            @Html.ActionLink("Delete", "DeleteUser", new { id=item.id }, new
-               {
-                   @class = "confirm-delete",
-                   @confirm = "Please Verify Your Informations: "
-                           + "\n" + "Name: " + item.name
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.phone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserType.name)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditUser", new { id = item.id }) |
+                    @Html.ActionLink("Delete", "DeleteUser", new { id = item.id }, new
+       {
+           @class = "confirm-delete",
+           @confirm = "Please Verify Your Informations: "
+                           + "\n" + "User Name: " + item.username
                            + "\n" + "Email: " + item.email
 
-               })
-        </td>
-    </tr>
-}
+       })
+                </td>
+            </tr>
+        }
 
-</table>
+    </table>
+</div>
+
+<div id='paging'>
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+</div>

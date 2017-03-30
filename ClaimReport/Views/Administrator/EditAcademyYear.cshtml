@@ -1,4 +1,4 @@
-﻿@model ClaimReport.Models.Academyyear
+﻿@model ClaimReport.Models.AcademyYearModel
 
 @{
     ViewBag.Title = "EditAcademyYear";
@@ -18,9 +18,17 @@
         @Html.HiddenFor(model => model.id)
 
         <div class="form-group confirm">
-            @Html.LabelFor(model => model.startReportDate, "Start Report Date", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.startReportDate, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group confirm">
+            @Html.LabelFor(model => model.startReportDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.startReportDate, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.startReportDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -28,7 +36,7 @@
         <div class="form-group confirm">
             @Html.LabelFor(model => model.closureReportDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.closureReportDate, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                @Html.EditorFor(model => model.closureReportDate, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.closureReportDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -36,7 +44,7 @@
         <div class="form-group confirm">
             @Html.LabelFor(model => model.closureEvidenceDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.closureEvidenceDate, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                @Html.EditorFor(model => model.closureEvidenceDate, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.closureEvidenceDate, "", new { @class = "text-danger" })
             </div>
         </div>
