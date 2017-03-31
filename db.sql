@@ -77,7 +77,7 @@ create table Faculty(
 	description text,
 	status bit default 1
 )
-
+select * from claim
 go
 
 insert into Faculty values ('Information technology', '', 1)
@@ -146,9 +146,9 @@ create table Item(
 )
 go
 insert into Item values('Assignment 1', '','2017-1-1', '2017-1-30', '2017-1-15', 1, 1)
-insert into Item values('Assignment 2', '','2017-2-1', '2017-2-30', '2017-2-15', 1, 1)
+insert into Item values('Assignment 2', '','2017-2-1', '2017-2-28', '2017-2-15', 1, 1)
 insert into Item values('Assignment 3', '','2017-3-1', '2017-3-30', '2017-3-15', 1, 1)
-insert into Item values('Project thery', '','2017-1-1', '2017-2-30', '2017-2-15', 3, 1)
+insert into Item values('Project thery', '','2017-1-1', '2017-2-28', '2017-2-15', 3, 1)
 insert into Item values('Project practical', '','2017-2-1', '2017-3-30', '2017-3-15', 3, 1)
 go
 
