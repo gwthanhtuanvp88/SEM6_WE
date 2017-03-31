@@ -20,7 +20,7 @@ namespace ClaimReport.Controllers
             {
                 if (user.UserType.name != "Admin")
                 {
-                    filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Login", action = "Index" }));
+                    filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Login", action = "NoPermission" }));
                 }
             }
 

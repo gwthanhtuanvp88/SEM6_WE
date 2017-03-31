@@ -8,12 +8,31 @@ using System.Net;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace ClaimReport.Controllers
 {
     public class CoordinatorController : CoordinatorPermissionController
     {
         private ReportClaimEntities db = new ReportClaimEntities();
+
+        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        {
+            var user = (User)Session["user"];
+            if (user == null)
+            {
+                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Login", action = "Index" }));
+            }
+            else
+            {
+                if (user.UserType.name != "Coordinator")
+                {
+                    filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Login", action = "NoPermission" }));
+                }
+            }
+
+            base.OnActionExecuted(filterContext);
+        }
 
         // GET: Coordinator
         public ActionResult Index(int? page)
@@ -77,7 +96,7 @@ namespace ClaimReport.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(int id, bool result)
+        public ActionResult Edit(int id, bool result, string comment)
         {
             String strResult = "";
             Claim claim = db.Claims.FirstOrDefault(c => c.id == id);
@@ -92,6 +111,10 @@ namespace ClaimReport.Controllers
             {
                 claim.result = 2;
                 strResult = "Rejected";
+            }
+            if(comment != null && comment != "")
+            {
+                claim.comment = comment;
             }
             db.SaveChanges();
             MailMessage mail = new MailMessage();

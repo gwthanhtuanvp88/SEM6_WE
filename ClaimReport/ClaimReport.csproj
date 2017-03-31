@@ -325,6 +325,7 @@
     <Content Include="Views\Shared\_breadcrumbs.cshtml" />
     <Content Include="Views\Coordinator\Edit.cshtml" />
     <Content Include="Views\Shared\_Sidebar_shortcuts.cshtml" />
+    <Content Include="Views\Login\NoPermission.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

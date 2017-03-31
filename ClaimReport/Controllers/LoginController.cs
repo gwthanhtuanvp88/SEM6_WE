@@ -59,5 +59,10 @@ namespace ClaimReport.Controllers
             Session["user"] = null;
             return RedirectToAction("Index");
         }
+
+        public ActionResult NoPermission()
+        {
+            return View();
+        }
     }
 }

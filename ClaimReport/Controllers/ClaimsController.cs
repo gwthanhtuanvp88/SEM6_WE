@@ -10,6 +10,7 @@ using ClaimReport.Models;
 using System.IO;
 using System.Net.Mail;
 using PagedList;
+using System.Web.Routing;
 
 namespace ClaimReport.Controllers
 {
@@ -17,12 +18,40 @@ namespace ClaimReport.Controllers
     {
         private ReportClaimEntities db = new ReportClaimEntities();
 
+        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        {
+            var user = (User)Session["user"];
+            if (user == null)
+            {
+                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Login", action = "Index" }));
+            }
+            else
+            {
+                if (user.UserType.name != "Student")
+                {
+                    filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Login", action = "NoPermission" }));
+                }
+            }
+
+            base.OnActionExecuted(filterContext);
+        }
+
         // GET: Claims
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? page, string txtSearch, int? result)
         {
             if (page == null)
                 page = 1;
-            var lstClaim = db.Claims.Where(c => c.status == true).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
+            if (txtSearch == null)
+                txtSearch = "";
+            IQueryable<Claim> lstClaim = null;
+            if(result == null)
+            {
+                lstClaim = db.Claims.Where(c => c.status == true && c.name.Contains(txtSearch)).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
+            }
+            else
+            {
+                lstClaim = db.Claims.Where(c => c.status == true && c.name.Contains(txtSearch) && c.result==result).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
+            }
             IPagedList<Claim> claims = lstClaim.ToPagedList((int)page, 5);
             return View(claims);
         }
@@ -105,6 +134,7 @@ namespace ClaimReport.Controllers
                     {
                         claim.coordinatorId = coordinator.id;
                         claim.datesubmited = DateTime.Now;
+                        claim.result = 0;
                         claim.status = true;
                         db.Claims.Add(claim);
                         db.SaveChanges();
