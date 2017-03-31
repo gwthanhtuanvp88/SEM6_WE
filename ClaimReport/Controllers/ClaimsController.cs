@@ -22,7 +22,7 @@ namespace ClaimReport.Controllers
         {
             if (page == null)
                 page = 1;
-            var lstClaim = db.Claims.Where(c => c.status == true).Include(c => c.Academyyear).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
+            var lstClaim = db.Claims.Where(c => c.status == true).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
             IPagedList<Claim> claims = lstClaim.ToPagedList((int)page, 5);
             return View(claims);
         }
@@ -47,9 +47,41 @@ namespace ClaimReport.Controllers
         // GET: Claims/Create
         public ActionResult Create()
         {
-            ViewBag.academyyearid = new SelectList(db.Academyyears.Where(c=>DateTime.Compare(DateTime.Now, (DateTime)c.startReportDate) > 0   
-                && (DateTime.Compare(DateTime.Now, (DateTime)c.closureReportDate) < 0)), "id", "name");
+            InitViewBagCreate();
             return View();
+        }
+
+        public void InitViewBagCreate()
+        {
+            //Init viewbag
+            Academyyear year = db.Academyyears.FirstOrDefault(c => DateTime.Compare(DateTime.Now, (DateTime)c.startReportDate) > 0
+    && (DateTime.Compare(DateTime.Now, (DateTime)c.closureReportDate) < 0));
+            if (year != null)
+            {
+                ViewBag.assessmentid = new SelectList(db.Assessments.Where(a => a.academyyearId == year.id), "id", "name");
+            }
+            if (db.Assessments.Where(a => a.academyyearId == year.id).ToList().Count > 0)
+            {
+                Assessment ass = db.Assessments.Where(a => a.academyyearId == year.id).ToList()[0];
+                ViewBag.itemId = new SelectList(db.Items.Where(i => i.assessmentId == ass.id), "id", "name");
+            }
+            else
+            {
+                ViewBag.itemId = new SelectList(db.Items.Where(i => i.id < 0));
+            }
+        }
+
+        public ActionResult GetItemByAssessment(int id)
+        {
+            List<SelectListItem> listItem = new List<SelectListItem>();
+            //The below code is hardcoded for demo. you mat replace with DB data 
+            //based on the  input coming to this method ( product id)
+            List<Item> lst = db.Items.Where(i => i.assessmentId == id).ToList();
+            foreach(Item i in lst)
+            {
+                listItem.Add(new SelectListItem { Value = i.id+"", Text=i.name });
+            }
+            return Json(listItem, JsonRequestBehavior.AllowGet);
         }
 
         // POST: Claims/Create
@@ -57,18 +89,19 @@ namespace ClaimReport.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "name,description,academyyearid")] Claim claim, IEnumerable<HttpPostedFileBase> files)
+        public ActionResult Create([Bind(Include = "name,description,itemId")] Claim claim, IEnumerable<HttpPostedFileBase> files)
         {
             if (ModelState.IsValid)
             {
                 User user = (User)Session["user"];
-                Academyyear academy = db.Academyyears.FirstOrDefault(a => a.id == claim.academyyearid);
+                Item item = db.Items.FirstOrDefault(a => a.id == claim.itemId);
                 var student = db.Students.FirstOrDefault(s => s.userid == user.id && s.status == true);
-                if (student != null && academy != null)
+                if (student != null && item != null)
                 {
+                    InitViewBagCreate();
                     claim.studentid = student.id;
                     var coordinator = db.Coordinators.FirstOrDefault(c => c.facutyid == student.facultyid && c.status == true);
-                    if (coordinator != null && DateTime.Compare(DateTime.Now, (DateTime)academy.closureReportDate) < 0)
+                    if (coordinator != null && DateTime.Compare(DateTime.Now, (DateTime)item.closureReportDate) < 0)
                     {
                         claim.coordinatorId = coordinator.id;
                         claim.datesubmited = DateTime.Now;
@@ -93,7 +126,7 @@ namespace ClaimReport.Controllers
                         {
                             if (file != null && file.ContentLength > 0)
                             {
-                                if (DateTime.Compare((DateTime)claim.datesubmited, (DateTime)academy.closureEvidenceDate) < 0)
+                                if (DateTime.Compare((DateTime)claim.datesubmited, (DateTime)item.closureEvidenceDate) < 0)
                                 {
                                     var fileName = Path.GetFileName(file.FileName);
                                     var myUniqueFileName = string.Format(@"{0}.txt", DateTime.Now.Ticks);
@@ -120,9 +153,7 @@ namespace ClaimReport.Controllers
                                 }
                                 else
                                 {
-                                    ModelState.AddModelError("academyyearid", "The time to upload evidence is end");
-                                    ViewBag.academyyearid = new SelectList(db.Academyyears.Where(c => DateTime.Compare(DateTime.Now, (DateTime)c.startReportDate) > 0
-                && (DateTime.Compare(DateTime.Now, (DateTime)c.closureReportDate) < 0)), "id", "name");
+                                    ModelState.AddModelError("itemId", "The time to upload evidence is end");
                                     return View();
                                 }
                             }
@@ -130,16 +161,14 @@ namespace ClaimReport.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("academyyearid", "The time to upload claim is end");
-                        ViewBag.academyyearid = new SelectList(db.Academyyears.Where(c => DateTime.Compare(DateTime.Now, (DateTime)c.startReportDate) > 0
-                && (DateTime.Compare(DateTime.Now, (DateTime)c.closureReportDate) < 0)), "id", "name");
+                        ModelState.AddModelError("itemId", "The time to upload claim is end");
                         return View();
                     }
                 }
                 return RedirectToAction("Index");
             }
 
-            ViewBag.academyyearid = new SelectList(db.Academyyears, "id", "id", claim.academyyearid);
+            ViewBag.academyyearid = new SelectList(db.Academyyears, "id", "id", claim.itemId);
             ViewBag.coordinatorId = new SelectList(db.Coordinators, "id", "id", claim.coordinatorId);
             ViewBag.studentid = new SelectList(db.Students, "id", "id", claim.studentid);
             return View(claim);
@@ -167,7 +196,7 @@ namespace ClaimReport.Controllers
             Claim claim = db.Claims.FirstOrDefault(c => c.id == (int)id);
             if (claim != null)
             {
-                if (DateTime.Compare((DateTime)claim.datesubmited, (DateTime)claim.Academyyear.closureEvidenceDate) < 0)
+                if (DateTime.Compare((DateTime)claim.datesubmited, (DateTime)claim.Item.closureEvidenceDate) < 0)
                 {
                     foreach (var file in files)
                     {
@@ -176,10 +205,9 @@ namespace ClaimReport.Controllers
                             var fileName = Path.GetFileName(file.FileName);
                             Evidence e = new Evidence();
                             e.claimid = claim.id;
-                            var myUniqueFileName = string.Format(@"{0}.txt", DateTime.Now.Ticks);
-                            myUniqueFileName = myUniqueFileName.Substring(0, 8);
-                            myUniqueFileName = myUniqueFileName.Replace(",", "");
-                            fileName = myUniqueFileName + fileName;
+                            Random random = new Random();
+                            int i = random.Next(10000000);
+                            fileName = i + fileName;
                             e.filename = fileName;
                             e.status = true;
                             e.dateUpload = DateTime.Now;

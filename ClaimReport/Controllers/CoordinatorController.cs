@@ -27,7 +27,7 @@ namespace ClaimReport.Controllers
             var coordinator = db.Coordinators.FirstOrDefault(x => x.userid == user.id);
 
             if (page == null) { page = 1;} 
-            var lstClaim = db.Claims.Where(c => c.status == true && c.coordinatorId == coordinator.id).Include(c => c.Academyyear).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
+            var lstClaim = db.Claims.Where(c => c.status == true && c.coordinatorId == coordinator.id).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
             IPagedList<Claim> claims = lstClaim.ToPagedList((int)page, 5);
             return View(claims);
         }
