@@ -182,6 +182,9 @@
     <Compile Include="Models\Academyyear.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Assessment.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Claim.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
@@ -207,6 +210,9 @@
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Faculty.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Item.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Role.cs">
