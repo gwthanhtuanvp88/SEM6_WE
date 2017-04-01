@@ -203,6 +203,9 @@
     <Compile Include="Models\Coordinator.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\daily_new_claim_each_faculty_Result.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Evidence.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
@@ -213,6 +216,9 @@
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Student.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sysdiagram.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\User.cs">
@@ -319,6 +325,7 @@
     <Content Include="Views\Shared\_breadcrumbs.cshtml" />
     <Content Include="Views\Coordinator\Edit.cshtml" />
     <Content Include="Views\Shared\_Sidebar_shortcuts.cshtml" />
+    <Content Include="Views\Manager\dailyReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
