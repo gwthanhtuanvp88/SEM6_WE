@@ -50,11 +50,35 @@
         </dd>
 
         <dt>
+            @Html.DisplayName("Comment")
+        </dt>
+
+        <dd>
+            <i>@Html.DisplayFor(model => model.comment)</i>
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Item name")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Item.name)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Assessment name")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Item.Assessment.name)
+        </dd>
+
+        <dt>
             @Html.DisplayName("Academy name")
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Academyyear.name)
+            @Html.DisplayFor(model => model.Item.Assessment.Academyyear.name)
         </dd>
 
         <dt>

@@ -10,6 +10,14 @@
 
 <p>
     @Html.ActionLink("Add new claim report", "Create")
+    @using (Html.BeginForm("Index", "Claims", FormMethod.Get))
+    {
+        <input id="idnotprocess" type="radio" name="result" value="0"/>        <label for="idnotprocess">Not process</label>
+        <input id="idaccept" type="radio" name="result" value="1"/>        <label for="idaccept">Accepted</label>
+        <input id="idject" type="radio" name="result" value="2" />       <label for="idject">Rejected</label>
+        <input type="text" placeholder="search" name="txtSearch"/>
+        <input type="submit" value="Search"/>
+    }
 </p>
 <table class="table">
     <tr>

@@ -77,7 +77,7 @@ create table Faculty(
 	description text,
 	status bit default 1
 )
-
+select * from claim
 go
 
 insert into Faculty values ('Information technology', '', 1)
@@ -138,25 +138,29 @@ create table Item(
 	id int primary key identity(1,1),
 	name nvarchar(100) not null,
 	description nvarchar(500),
+	startReportDate date,
+	closureReportDate date,
+	closureEvidenceDate date,
 	assessmentId int references Assessment(id),
 	status bit default 1
 )
 go
-insert into Item values('Assignment 1', '', 1, 1)
-insert into Item values('Assignment 2', '', 1, 1)
-insert into Item values('Assignment 3', '', 1, 1)
-insert into Item values('Project thery', '', 3, 1)
-insert into Item values('Project practical', '', 3, 1)
+insert into Item values('Assignment 1', '','2017-1-1', '2017-1-30', '2017-1-15', 1, 1)
+insert into Item values('Assignment 2', '','2017-2-1', '2017-2-28', '2017-2-15', 1, 1)
+insert into Item values('Assignment 3', '','2017-3-1', '2017-3-30', '2017-3-15', 1, 1)
+insert into Item values('Project thery', '','2017-1-1', '2017-2-28', '2017-2-15', 3, 1)
+insert into Item values('Project practical', '','2017-2-1', '2017-3-30', '2017-3-15', 3, 1)
 go
 
 create table Claim(
 	id int primary key identity(1,1),
-	name nvarchar(50),
+	name nvarchar(50) not null,
 	description	text, 
-	datesubmited date,
+	datesubmited date not null,
 	studentid int not null references Student(id),
 	itemId int not null references Item(id), 
 	coordinatorId int not null references Coordinator(id),
+	comment nvarchar(500),
 	dateresult date,
 	result tinyint default 0, /*0 means not process yey, 1 means refuse, 2 means accept*/
 	status bit default 1
