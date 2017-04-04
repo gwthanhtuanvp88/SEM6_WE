@@ -1,7 +1,8 @@
 ﻿$(document).on("ready", function () {
+    // Confirm
+    // ===============================
     $(".confirm-submit").click(function (e) {
         var content = "Please Verify Your Informations: \n";
-        var flag = true;
         $(".confirm").each(function () {
             if ($(this).find(".form-control").val() != "") {
                 if ($(this).find(".form-control").is("select")) {
@@ -12,13 +13,12 @@
             }
         });
 
-        if (flag) {
-            e.preventDefault();
-            var result = confirm(content);
-            if (result) {
-                $("form").submit();
-            }
+        e.preventDefault();
+        var result = confirm(content);
+        if (result) {
+            $("form").submit();
         }
+
     });
 
     $(".confirm-delete").click(function (e) {
@@ -30,4 +30,10 @@
             window.location.href = href;
         }
     });
+
+    // Selected menu
+    // ===============================
+    var selectedMenu = $("body").attr("selected-menu");
+    $(selectedMenu).addClass("active");
+
 });

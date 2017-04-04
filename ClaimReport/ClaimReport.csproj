@@ -167,14 +167,11 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdministratorController.cs" />
-    <Compile Include="Controllers\AdminPermissionController.cs" />
     <Compile Include="Controllers\CoordinatorController.cs" />
-    <Compile Include="Controllers\CoordinatorPermissionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManagerController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ClaimsController.cs" />
-    <Compile Include="Controllers\ManagerPermissionControllerController.cs" />
     <Compile Include="Controllers\UserTypesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -204,6 +201,9 @@
       <DependentUpon>ClaimReport.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\Coordinator.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\daily_new_claim_each_faculty_Result.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Evidence.cs">
@@ -315,17 +315,23 @@
     <Content Include="Views\Administrator\CreateFaculty.cshtml" />
     <Content Include="Views\Administrator\EditFaculty.cshtml" />
     <Content Include="Views\Administrator\Users.cshtml" />
-    <Content Include="Views\Administrator\CreateUser.cshtml" />
-    <Content Include="Views\Administrator\EditUser.cshtml" />
+    <Content Include="Views\Administrator\UserCreate.cshtml" />
+    <Content Include="Views\Administrator\UserEdit.cshtml" />
     <Content Include="Views\Administrator\Academyyear.cshtml" />
-    <Content Include="Views\Administrator\CreateAcademyYear.cshtml" />
-    <Content Include="Views\Administrator\EditAcademyYear.cshtml" />
+    <Content Include="Views\Administrator\AcademyYearCreate.cshtml" />
+    <Content Include="Views\Administrator\AcademyYearEdit.cshtml" />
     <Content Include="Views\Coordinator\Index.cshtml" />
     <Content Include="Views\Shared\_Main_Menu.cshtml" />
     <Content Include="Views\Shared\_breadcrumbs.cshtml" />
     <Content Include="Views\Coordinator\Edit.cshtml" />
     <Content Include="Views\Shared\_Sidebar_shortcuts.cshtml" />
     <Content Include="Views\Login\NoPermission.cshtml" />
+    <Content Include="Views\Administrator\Item.cshtml" />
+    <Content Include="Views\Administrator\ItemCreate.cshtml" />
+    <Content Include="Views\Administrator\ItemEdit.cshtml" />
+    <Content Include="Views\Administrator\Assessment.cshtml" />
+    <Content Include="Views\Administrator\AssessmentCreate.cshtml" />
+    <Content Include="Views\Administrator\AssessmentEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -2,9 +2,18 @@
 @{var user = (User)Session["user"];}
 @if (user != null)
 {
-    if (user.UserType.name == "Admin")
+    if (user.UserType.name == "Administrator")
     {
-        <li class="">
+        <li class="users">
+            <a href="@Url.Action("Users", "Administrator")">
+                <i class="menu-icon fa fa-user"></i>
+                <span class="menu-text"> Users </span>
+            </a>
+
+            <b class="arrow"></b>
+        </li>
+
+        <li class="academyyear">
             <a href="@Url.Action("Academyyear", "Administrator")">
                 <i class="menu-icon fa fa-calendar"></i>
                 <span class="menu-text"> Academy year </span>
@@ -13,10 +22,19 @@
             <b class="arrow"></b>
         </li>
 
-        <li class="">
-            <a href="@Url.Action("Users", "Administrator")">
-                <i class="menu-icon fa fa-user"></i>
-                <span class="menu-text"> Users </span>
+        <li class="assessment">
+            <a href="@Url.Action("Assessment", "Administrator")">
+                <i class="menu-icon fa fa-folder"></i>
+                <span class="menu-text"> Assessment </span>
+            </a>
+
+            <b class="arrow"></b>
+        </li>
+
+        <li class="item">
+            <a href="@Url.Action("Item", "Administrator")">
+                <i class="menu-icon fa fa-file"></i>
+                <span class="menu-text"> Item </span>
             </a>
 
             <b class="arrow"></b>

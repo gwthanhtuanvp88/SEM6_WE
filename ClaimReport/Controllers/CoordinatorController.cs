@@ -12,7 +12,7 @@ using System.Web.Routing;
 
 namespace ClaimReport.Controllers
 {
-    public class CoordinatorController : CoordinatorPermissionController
+    public class CoordinatorController : Controller
     {
         private ReportClaimEntities db = new ReportClaimEntities();
 

@@ -3,15 +3,44 @@
 
 @{
     ViewBag.Title = "Users";
+    ViewBag.selectedMenu = ".sidebar .users";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@if (@ViewBag.Error != null)
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        @ViewBag.Error
+    </div>
+}
 
-<h2>Users</h2>
+@if (@ViewBag.Success != null)
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        @ViewBag.Success
+    </div>
+}
 
-<p>
-    @Html.ActionLink("Create New", "CreateUser")
-</p>
-<div class="table-responsive">
+<h2>@ViewBag.Title</h2>
+<div class="row">
+    <div class="col-md-2 m-top">
+        @Html.ActionLink("Create New", "UserCreate", "", new { @class = "btn btn-block btn-sm btn-primary" })
+    </div>
+    <div class="col-md-6 col-md-offset-4 m-top">
+        @using (Html.BeginForm())
+        {
+            <div class="input-group">
+                @Html.TextBox("txtSearch", "", new { @class = "form-control", @placeholder = "Name" })
+                <span class="input-group-btn">
+                    <input type="submit" value="Search" class="btn btn-default" />
+                </span>
+            </div><!-- /input-group -->
+        }
+    </div>
+</div>
+
+<div class="table-responsive m-top">
     <table class="table">
         <tr>
             <th>
@@ -57,22 +86,21 @@
                     @Html.DisplayFor(modelItem => item.UserType.name)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "EditUser", new { id = item.id }) |
-                    @Html.ActionLink("Delete", "DeleteUser", new { id = item.id }, new
-       {
-           @class = "confirm-delete",
-           @confirm = "Please Verify Your Informations: "
-                           + "\n" + "User Name: " + item.username
-                           + "\n" + "Email: " + item.email
+                    @Html.ActionLink("Edit", "UserEdit", new { id = item.id }) |
+                    @Html.ActionLink("Delete", "UserDelete", new { id = item.id }, new
+               {
+                   @class = "confirm-delete",
+                   @confirm = "Are you sure want delete this item ?"
+                                           + "\n" + "User Name: " + item.username
+                                           + "\n" + "Email: " + item.email
 
-       })
+               })
                 </td>
             </tr>
         }
-
     </table>
 </div>
 
 <div id='paging'>
-    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+    @Html.PagedListPager(Model, page => Url.Action("Users", new { page }))
 </div>

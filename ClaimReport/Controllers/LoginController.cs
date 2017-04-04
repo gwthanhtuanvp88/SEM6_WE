@@ -32,7 +32,7 @@ namespace ClaimReport.Controllers
             {
                 Session["user"] = user;
                 ViewBag.strErrorMessage = "Username an password are incorrect";
-                if (user.UserType.name == "Admin")
+                if (user.UserType.name == "Administrator")
                 {
                     return RedirectToAction("Users", "Administrator");
                 }

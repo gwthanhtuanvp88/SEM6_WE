@@ -1,18 +1,19 @@
-﻿@model ClaimReport.Models.AcademyYearModel
+﻿@model ClaimReport.Models.ItemModel
 
 @{
-    ViewBag.Title = "CreateAcademyYear";
+    ViewBag.Title = "Item Create";
+    ViewBag.selectedMenu = ".sidebar .item";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Create</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
-
+    
     <div class="form-horizontal">
-        <h4>Academy Year</h4>
+        <h4>@ViewBag.Title</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group confirm">
@@ -20,6 +21,14 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group confirm">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -47,6 +56,20 @@
             </div>
         </div>
 
+        <div class="form-group confirm">
+            @Html.LabelFor(model => model.assessmentID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select class="form-control" data-val="true" data-val-number="The field Assessment must be a number." data-val-required="The Assessment field is required." id="assessmentID" name="assessmentID">
+                    <option value=""></option>
+                    @foreach (var item in ViewBag.Assessments)
+                    {
+                        <option value="@item.id">@item.name - @item.Academyyear.name (@Convert.ToDateTime(item.Academyyear.startReportDate).ToString("MM/dd//yyy") - @Convert.ToDateTime(item.Academyyear.closureReportDate).ToString("MM/dd//yyy") - @Convert.ToDateTime(item.Academyyear.closureEvidenceDate).ToString("MM/dd//yyy"))  </option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(model => model.assessmentID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default confirm-submit" />
@@ -56,5 +79,5 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Academyyear")
+    @Html.ActionLink("Back to List", "Item")
 </div>

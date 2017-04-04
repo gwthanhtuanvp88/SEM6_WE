@@ -1,11 +1,12 @@
 ﻿@using PagedList.Mvc;
-@model PagedList.PagedList<ClaimReport.Models.Academyyear>
+@model PagedList.PagedList<ClaimReport.Models.Item>
 
 @{
-    ViewBag.Title = "Academy Year";
-    ViewBag.selectedMenu = ".sidebar .academyyear";
+    ViewBag.Title = "Item";
+    ViewBag.selectedMenu = ".sidebar .item";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 @if (@ViewBag.Error != null)
 {
     <div class="alert alert-danger alert-dismissible" role="alert">
@@ -23,9 +24,10 @@
 }
 
 <h2>@ViewBag.Title</h2>
+
 <div class="row">
     <div class="col-md-2 m-top">
-        @Html.ActionLink("Create New", "AcademyYearCreate", "", new { @class = "btn btn-block btn-sm btn-primary" })
+        @Html.ActionLink("Create New", "ItemCreate", "", new { @class = "btn btn-block btn-sm btn-primary" })
     </div>
     <div class="col-md-6 col-md-offset-4 m-top">
         @using (Html.BeginForm())
@@ -47,6 +49,9 @@
                 @Html.DisplayName("Name")
             </th>
             <th>
+                @Html.DisplayName("Description")
+            </th>
+            <th>
                 @Html.DisplayName("Start Report Date")
             </th>
             <th>
@@ -55,6 +60,9 @@
             <th>
                 @Html.DisplayName("Closure Evidence Date")
             </th>
+            <th>
+                @Html.DisplayName("Assessment")
+            </th>
             <th></th>
         </tr>
 
@@ -62,7 +70,10 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelitem => item.name)
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.description)
                 </td>
                 <td>
                     @Convert.ToDateTime(item.startReportDate).ToString("MM/dd//yyy")
@@ -74,8 +85,11 @@
                     @Convert.ToDateTime(item.closureEvidenceDate).ToString("MM/dd//yyy")
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "AcademyYearEdit", new { id = item.id }) |
-                    @Html.ActionLink("Delete", "AcademyYearDelete", new { id = item.id }, new
+                    @Html.DisplayFor(modelItem => item.Assessment.name)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "ItemEdit", new { id = item.id }) |
+                    @Html.ActionLink("Delete", "ItemDelete", new { id = item.id }, new
                {
                    @class = "confirm-delete",
                    @confirm = "Are you sure want delete this item ? "
@@ -83,6 +97,7 @@
                    + "\n" + "Start Report Date: " + @Convert.ToDateTime(item.startReportDate).ToString("MM/dd//yyy")
                    + "\n" + "Closure Report Date: " + @Convert.ToDateTime(item.closureReportDate).ToString("MM/dd//yyy")
                    + "\n" + "Closure Evidence Date: " + @Convert.ToDateTime(item.closureEvidenceDate).ToString("MM/dd//yyy")
+                   + "\n" + "Assessment: " + item.Assessment.name
                })
                 </td>
             </tr>
@@ -92,5 +107,10 @@
 </div>
 
 <div id='paging'>
-    @Html.PagedListPager(Model, page => Url.Action("Academyyear", new { page }))
+    @Html.PagedListPager(Model, page => Url.Action("Item", new { page }))
 </div>
+
+@if (ViewBag.ViewAll != null)
+{
+    @Html.ActionLink("Back to List", "Item")
+}

@@ -67,6 +67,49 @@ namespace ClaimReport.Models
         [Required]
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "closure Evidence Date*")]
+        public DateTime closureEvidenceDate { get; set; }        
+    }
+
+    public class AssessmentModel
+    {
+        public int ID { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        [Required]
+        [Display(Name = "Academy Year")]
+        public int? academyeYearId { get; set; }
+    }
+
+    public class ItemModel
+    {
+        public int ID { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        [Required]
+        [Display(Name = "Start Report Date")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime startReportDate { get; set; }
+
+        [Required]
+        [Display(Name = "Closure Report Date")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime closureReportDate { get; set; }
+
+        [Required]
+        [Display(Name = "Closure Evidence Date")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime closureEvidenceDate { get; set; }
+
+        [Required]
+        [Display(Name = "Assessment")]
+        public int? assessmentID { get; set; }
     }
 }

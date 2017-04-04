@@ -130,7 +130,7 @@ create table Assessment(
 )
 
 go
-insert into Assessment values('Assignment', '', 1, 1)
+insert into Assessment values('Assignment 1', '', 1, 1)
 insert into Assessment values('Project', '', 1, 1)
 insert into Assessment values('Assignment', '', 2, 1)
 go

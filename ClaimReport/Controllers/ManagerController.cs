@@ -6,12 +6,31 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace ClaimReport.Controllers
 {
-    public class ManagerController : ManagerPermissionControllerController
+    public class ManagerController : Controller
     {
         private ReportClaimEntities db = new ReportClaimEntities();
+
+        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        {
+            var user = (User)Session["user"];
+            if (user == null)
+            {
+                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Login", action = "Index" }));
+            }
+            else
+            {
+                if (user.UserType.name != "Manager")
+                {
+                    filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Login", action = "Index" }));
+                }
+            }
+
+            base.OnActionExecuted(filterContext);
+        }
 
         // GET: Manager
         public ActionResult Index(int? page)
