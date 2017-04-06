@@ -43,7 +43,7 @@
 
     if (user.UserType.name == "Coordinator")
     {
-        <li class="">
+        <li class="claim">
             <a href="@Url.Action("Index", "Coordinator")">
                 <i class="menu-icon fa fa-list"></i>
                 <span class="menu-text"> Claim </span>
@@ -53,14 +53,14 @@
 
     if (user.UserType.name == "Manager")
     {
-        <li class="">
+        <li class="claim">
             <a href="@Url.Action("Index", "Manager")">
                 <i class="menu-icon fa fa-list"></i>
                 <span class="menu-text"> Claims </span>
             </a>
         </li>
 
-        <li class="">
+        <li class="report open">
             <a href="#" class="dropdown-toggle">
                 <i class="menu-icon fa fa-area-chart"></i>
                 <span class="menu-text"> Reports </span>
@@ -79,7 +79,7 @@
 
     if (user.UserType.name == "Student")
     {
-        <li class="">
+        <li class="claim">
             <a href="@Url.Action("Index", "Claims")">
                 <i class="menu-icon fa fa-list"></i>
                 <span class="menu-text"> Claim </span>

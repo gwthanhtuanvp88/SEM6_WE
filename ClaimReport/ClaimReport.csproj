@@ -215,6 +215,12 @@
     <Compile Include="Models\Item.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Number_of_claims_within_each_Faculty_for_each_academic_year_Result.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Number_of_students_making_a_claim_within_each_Faculty_for_each_academic_year_Result.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Role.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
@@ -272,6 +278,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\main.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\report.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
@@ -332,6 +339,7 @@
     <Content Include="Views\Administrator\Assessment.cshtml" />
     <Content Include="Views\Administrator\AssessmentCreate.cshtml" />
     <Content Include="Views\Administrator\AssessmentEdit.cshtml" />
+    <Content Include="Views\Manager\Report.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

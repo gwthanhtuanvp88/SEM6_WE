@@ -176,3 +176,114 @@ create table Evidence(
 	dateUpload date not null,
 	status bit default 1
 )
+
+Go
+
+/*Statistics Report
+===============================*/
+
+-- Number of claims within each Faculty for each academic year
+-- Percentage of claims by each Faculty for any academic year
+
+CREATE PROCEDURE Number_of_claims_within_each_Faculty_for_each_academic_year
+	@academicYearID int
+AS
+BEGIN
+	select f.name, COUNT(c.id) as claims
+	from Claim c
+	join Student s
+	on c.studentid = s.id
+	join Faculty f 
+	on s.facultyid = f.id
+	join item i 
+	on c.itemId = i.id
+	join Assessment a
+	on i.assessmentId = a.id
+	join Academyyear ay
+	on a.academyyearId = ay.id
+	where ay.id = @academicYearID
+	group by f.name
+END
+
+go
+-- Number of students making a claim within each Faculty for each academic year
+CREATE PROCEDURE Number_of_students_making_a_claim_within_each_Faculty_for_each_academic_year
+	@academicYearID int
+AS
+BEGIN
+	select f.name, COUNT(s.id) as student
+	from Claim c
+	join Student s
+	on c.studentid = s.id
+	join Faculty f 
+	on s.facultyid = f.id
+	join item i 
+	on c.itemId = i.id
+	join Assessment a
+	on i.assessmentId = a.id
+	join Academyyear ay
+	on a.academyyearId = ay.id
+	where ay.id = 1
+	group by f.name
+END
+
+
+/* Exception Report
+===============================*/
+go
+CREATE PROCEDURE Total_claims
+	@academicYearID int
+AS
+BEGIN
+	select COUNT(c.id) as claims
+	from Claim c
+	LEFT join Evidence e
+	on c.id = e.claimid
+	join Item i 
+	on i.id = c.itemId
+	join Assessment a 
+	on a.id = i.assessmentId
+	join Academyyear ay 
+	on ay.id = a.academyyearId
+	where ay.id = @academicYearID
+END
+
+go 
+-- Claims without uploaded evidence.
+CREATE PROCEDURE Claims_without_uploaded_evidence
+	@academicYearID int
+AS
+BEGIN
+	select COUNT(c.id) as claims
+	from Claim c
+	LEFT join Evidence e
+	on c.id = e.claimid
+	join Item i 
+	on i.id = c.itemId
+	join Assessment a 
+	on a.id = i.assessmentId
+	join Academyyear ay 
+	on ay.id = a.academyyearId
+	where e.id is null and ay.id = @academicYearID
+END
+
+go
+-- Claims without a decision after 14 days.
+CREATE PROCEDURE Claims_without_a_decision_after_14_days
+	@academicYearID int
+AS
+BEGIN
+	select COUNT(c.id) as claims
+	from Claim c
+	LEFT join Evidence e
+	on c.id = e.claimid
+	join Item i 
+	on i.id = c.itemId
+	join Assessment a 
+	on a.id = i.assessmentId
+	join Academyyear ay 
+	on ay.id = a.academyyearId
+	where 
+	ay.id = @academicYearID and c.result = 0 and DATEDIFF(day, c.datesubmited, GETDATE()) > 14
+END
+

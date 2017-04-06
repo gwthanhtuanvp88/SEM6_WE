@@ -2,6 +2,7 @@
 @model ClaimReport.Models.Claim
 @{
     ViewBag.Title = "Details";
+    ViewBag.selectedMenu = ".sidebar .claim";
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<Evidence> lstEvidence = ViewBag.lstEvidence;
     string result = ViewBag.result;
@@ -24,7 +25,14 @@
                 }
                 else
                 {
-                    @Html.DisplayName("Not process yet")
+                    if (DateTime.Compare(DateTime.Now, Model.datesubmited.AddDays(15)) > 0)
+                    {
+                        @Html.DisplayName("The claim is out of 14 days since claim upload date.")
+                    }
+                    else
+                    {
+                        @Html.DisplayName("Not process yet")
+                    }
                 }
             }
             else
@@ -44,6 +52,11 @@
 
                 <br>
 
+                <span>Coordinator:</span>
+                @Html.DisplayFor(model => model.Coordinator.User.name)
+
+                <br>
+
                 <span>Faculty:</span>
                 @Html.DisplayFor(model => model.Student.Faculty.name)
 
@@ -51,23 +64,40 @@
             </div>
 
             <div class="col-md-6">
-                <span>Academy Year: </span>
-                @Html.DisplayFor(model => model.Academyyear.name)
+                <div>
+                    <span>Date submit: </span>
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.datesubmited))
+                </div>
 
-                <br />
+                <div>
+                    <span>Assessment: </span>
+                    @Html.DisplayFor(model => model.Item.Assessment.name)
+                </div>
 
-                <span>Start Report Date:</span>
-                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Academyyear.startReportDate))
+                <div>
+                    <span>Item: </span>
+                    @Html.DisplayFor(model => model.Item.name)
+                </div>
 
-                <br>
+                <div>
+                    <span>Academy Year: </span>
+                    @Html.DisplayFor(model => model.Item.Assessment.Academyyear.name)
+                </div>
+                
+                @*<div>
+                    <span>Start Report Date:</span>
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Item.Assessment.Academyyear.startReportDate))
+                </div>
 
-                <span>Closure Report Date:</span>
-                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Academyyear.closureEvidenceDate))
+                <div>
+                    <span>Closure Report Date:</span>
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Item.Assessment.Academyyear.closureEvidenceDate))
+                </div>
 
-                <br>
-
-                <span>Closure Evedence Date:</span>
-                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Academyyear.closureEvidenceDate))
+                <div>
+                    <span>Closure Evedence Date:</span>
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.Item.Assessment.Academyyear.closureEvidenceDate))
+                </div>*@
 
                 <br><br>
             </div>
@@ -76,10 +106,10 @@
     <div class="col-md-6 col-md-pull-6">
         @Html.DisplayFor(model => model.description)
         <hr>
-
         @if (lstEvidence != null && lstEvidence.Count > 0)
         {
-            <table style="border-spacing: 10px;border-collapse: separate">
+            <p><strong>Evidences:</strong></p>
+            <table class="table">
                 @foreach (var item in lstEvidence)
                 {
                     <tr>

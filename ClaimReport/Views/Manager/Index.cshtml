@@ -2,23 +2,41 @@
 @model PagedList.PagedList<ClaimReport.Models.Claim>
 
 @{
-    ViewBag.Title = "index";
+    ViewBag.Title = "Claims";
+    ViewBag.selectedMenu = ".sidebar .claim";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Claim</h2>
+<h2>@ViewBag.Title</h2>
 
-<div class="table-responsive">
+<div class="row">
+    <div class="col-md-12 m-top">
+        @using (Html.BeginForm())
+        {
+            <div class="input-group">
+                @Html.TextBox("txtSearch", "", new { @class = "form-control", @placeholder = "Title" })
+                <span class="input-group-btn">
+                    <input type="submit" value="Search" class="btn btn-default" />
+                </span>
+            </div><!-- /input-group -->
+        }
+    </div>
+</div>
+
+<div class="table-responsive m-top">
     <table class="table">
         <tr>
             <th>
                 @Html.DisplayName("Title")
             </th>
             <th>
-                @Html.DisplayName("Student name")
+                @Html.DisplayName("Student")
             </th>
             <th>
-                @Html.DisplayName("Academy Year")
+                @Html.DisplayName("Coordinator")
+            </th>
+            <th>
+                @Html.DisplayName("Faculy")
             </th>
             <th>
                 @Html.DisplayName("Result")
@@ -36,7 +54,10 @@
                     @Html.DisplayFor(modelItem => item.Student.User.name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Academyyear.name)
+                    @Html.DisplayFor(modelItem => item.Coordinator.User.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student.Faculty.name)
                 </td>
                 <td>
                     @{
@@ -50,7 +71,14 @@
                         }
                         else
                         {
-                            @Html.DisplayName("Not process yet")
+                            if (DateTime.Compare(DateTime.Now, item.datesubmited.AddDays(15)) > 0)
+                            {
+                                @Html.DisplayName("The claim is out of 14 days since claim upload date.")
+                            }
+                            else
+                            {
+                                @Html.DisplayName("Not process yet")
+                            }
                         }
                     }
                 </td>
@@ -58,11 +86,15 @@
                     @Html.ActionLink("Details", "Details", new { id = item.id })
                 </td>
             </tr>
-        }
-
+         }
     </table>
 </div>
 
 <div id='paging'>
     @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
 </div>
+
+@if (ViewBag.ViewAll != null)
+{
+    @Html.ActionLink("Back to List", "Index")
+}

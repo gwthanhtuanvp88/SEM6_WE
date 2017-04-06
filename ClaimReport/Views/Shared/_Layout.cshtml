@@ -146,10 +146,10 @@
     <script src="~/Content/js/jquery-1.11.3.min.js"></script>
     <![endif]-->
     <script type="text/javascript">
-        if ('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
-        console.log("1");   
+        if ('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>"); 
     </script>
     <script type="text/javascript" src="~/Scripts/main.js"></script>
+    @RenderSection("scripts", required: false)
     <script src="~/Content/js/bootstrap.min.js"></script>
 
     <!-- page specific plugin scripts -->
