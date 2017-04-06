@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Report";
+    ViewBag.Title = "Summary Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,4 +9,14 @@
     <script src="~/Scripts/report.js"></script>
 }
 
-<canvas id="myChart" width="400" height="400"></canvas>
+<h2>@ViewBag.Title</h2>
+<br />
+
+<div class="row">
+    <div class="col-md-6">
+        <canvas id="Number_of_claims_within_each_Faculty_for_each_academic_year" width="400" height="400"></canvas>
+    </div>
+    <div class="col-md-6">
+        <canvas id="Number_of_students_making_a_claim_within_each_Faculty_for_each_academic_year" width="400" height="400"></canvas>
+    </div>
+</div>
