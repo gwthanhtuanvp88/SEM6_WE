@@ -237,7 +237,7 @@ function day_has_the_most_claim(academyYearID) {
                         pointHitRadius: 10,
                         data: res.data,
                         spanGaps: false,
-                    }
+                    },
                 ]
             };
 

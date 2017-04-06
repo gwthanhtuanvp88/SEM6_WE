@@ -11,9 +11,8 @@
 
 <h2>@ViewBag.Title</h2>
 <br />
-<div class="row">
-    @Html.DropDownList("AcademyYear", new SelectList(ViewBag.AcademyYear, "id", "name"), "Select Academy Year", new { @id = "academy-year-select", @class = "form-control" })
-</div>
+
+@Html.DropDownList("AcademyYear", new SelectList(ViewBag.AcademyYear, "id", "name"), "Select Academy Year", new { @id = "academy-year-select", @class = "form-control" })
 
 <br >
 <div class="row">
