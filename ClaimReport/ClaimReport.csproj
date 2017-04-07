@@ -179,6 +179,7 @@
     <Compile Include="Models\Academyyear.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\AdminModel.cs" />
     <Compile Include="Models\Assessment.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
@@ -203,6 +204,12 @@
     <Compile Include="Models\Coordinator.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
+<<<<<<< HEAD
+=======
+    <Compile Include="Models\day_has_the_most_claim_Result.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
+>>>>>>> ac8141112592fcb4e16ec03f04bf4e2fcb7746b5
     <Compile Include="Models\Evidence.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
@@ -227,7 +234,6 @@
     <Compile Include="Models\User.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\AdminModel.cs" />
     <Compile Include="Models\UserRole.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
@@ -275,6 +281,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\main.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\report-academy-year.js" />
     <Content Include="Scripts\report.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -337,6 +344,7 @@
     <Content Include="Views\Administrator\AssessmentCreate.cshtml" />
     <Content Include="Views\Administrator\AssessmentEdit.cshtml" />
     <Content Include="Views\Manager\Report.cshtml" />
+    <Content Include="Views\Manager\AcademyYearReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

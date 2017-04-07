@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewBag.Title = "Academy Year Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
+    <script src="~/Scripts/report-academy-year.js"></script>
+}
+
+<h2>@ViewBag.Title</h2>
+<br />
+
+@Html.DropDownList("AcademyYear", new SelectList(ViewBag.AcademyYear, "id", "name"), "Select Academy Year", new { @id = "academy-year-select", @class = "form-control" })
+
+<br >
+<div class="row">
+    <div class="col-md-4">
+        <canvas id="Percentage_of_claims_by_each_Faculty_for_any_cademic_year" width="400" height="400"></canvas>
+    </div>
+    <div class="col-md-4">
+        <canvas id="Claims_without_uploaded_evidence" width="400" height="400"></canvas>
+    </div>
+    <div class="col-md-4">
+        <canvas id="Claims_without_a_decision_after_14_days" width="400" height="400"></canvas>
+    </div>
+</div>
+
+<hr />
+<div class="row m-top">
+    <div class="col-md-6 col-md-offset-3">
+        <canvas id="day_has_the_most_claim" width="400" height="400"></canvas>
+    </div>
+</div>

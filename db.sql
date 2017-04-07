@@ -166,6 +166,14 @@ create table Claim(
 	status bit default 1
 )
 
+go
+insert into Claim values('Claim 1', '',GETDATE(), 1, 1, 1, '', null, 0 ,1)
+insert into Claim values('Claim 1', '',GETDATE(), 1, 2, 1, '', null, 0 ,1)
+insert into Claim values('Claim 1', '',GETDATE(), 1, 3, 1, '', null, 0 ,1)
+insert into Claim values('Claim 1', '',GETDATE(), 2, 4, 2, '', null, 0 ,1)
+insert into Claim values('Claim 1', '',GETDATE(), 2, 5, 2, '', null, 0 ,1)
+
+
 go 
 
 create table Evidence(
@@ -189,7 +197,7 @@ CREATE PROCEDURE Number_of_claims_within_each_Faculty_for_each_academic_year
 	@academicYearID int
 AS
 BEGIN
-	select f.name, COUNT(c.id) as claims
+	select f.name, COUNT(DISTINCT c.id) as claims
 	from Claim c
 	join Student s
 	on c.studentid = s.id
@@ -206,12 +214,13 @@ BEGIN
 END
 
 go
+
 -- Number of students making a claim within each Faculty for each academic year
 CREATE PROCEDURE Number_of_students_making_a_claim_within_each_Faculty_for_each_academic_year
 	@academicYearID int
 AS
 BEGIN
-	select f.name, COUNT(s.id) as student
+	select f.name, COUNT(DISTINCT  s.id) as student
 	from Claim c
 	join Student s
 	on c.studentid = s.id
@@ -223,30 +232,13 @@ BEGIN
 	on i.assessmentId = a.id
 	join Academyyear ay
 	on a.academyyearId = ay.id
-	where ay.id = 1
+	where ay.id = @academicYearID
 	group by f.name
 END
 
 
 /* Exception Report
 ===============================*/
-go
-CREATE PROCEDURE Total_claims
-	@academicYearID int
-AS
-BEGIN
-	select COUNT(c.id) as claims
-	from Claim c
-	LEFT join Evidence e
-	on c.id = e.claimid
-	join Item i 
-	on i.id = c.itemId
-	join Assessment a 
-	on a.id = i.assessmentId
-	join Academyyear ay 
-	on ay.id = a.academyyearId
-	where ay.id = @academicYearID
-END
 
 go 
 -- Claims without uploaded evidence.
@@ -254,7 +246,7 @@ CREATE PROCEDURE Claims_without_uploaded_evidence
 	@academicYearID int
 AS
 BEGIN
-	select COUNT(c.id) as claims
+	select COUNT(DISTINCT c.id) as claims
 	from Claim c
 	LEFT join Evidence e
 	on c.id = e.claimid
@@ -264,7 +256,7 @@ BEGIN
 	on a.id = i.assessmentId
 	join Academyyear ay 
 	on ay.id = a.academyyearId
-	where e.id is null and ay.id = @academicYearID
+	where e.id is null and ay.id = 1
 END
 
 go
@@ -273,7 +265,7 @@ CREATE PROCEDURE Claims_without_a_decision_after_14_days
 	@academicYearID int
 AS
 BEGIN
-	select COUNT(c.id) as claims
+	select COUNT(DISTINCT c.id) as claims
 	from Claim c
 	LEFT join Evidence e
 	on c.id = e.claimid
@@ -283,7 +275,27 @@ BEGIN
 	on a.id = i.assessmentId
 	join Academyyear ay 
 	on ay.id = a.academyyearId
-	where 
-	ay.id = @academicYearID and c.result = 0 and DATEDIFF(day, c.datesubmited, GETDATE()) > 14
+	where ay.id = @academicYearID and c.result = 0 and DATEDIFF(day, c.datesubmited, GETDATE()) > 14
 END
 
+
+-- Day has the most claim 
+CREATE PROCEDURE day_has_the_most_claim
+	@academicYearID int
+AS
+BEGIN
+	select c.datesubmited, COUNT(DISTINCT c.id) as claims
+	from Claim c
+	join Student s
+	on c.studentid = s.id
+	join Faculty f 
+	on s.facultyid = f.id
+	join item i 
+	on c.itemId = i.id
+	join Assessment a
+	on i.assessmentId = a.id
+	join Academyyear ay
+	on a.academyyearId = ay.id
+	where ay.id = @academicYearID
+	group by c.datesubmited
+END
