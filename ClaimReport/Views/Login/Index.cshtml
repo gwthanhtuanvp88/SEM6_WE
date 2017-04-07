@@ -64,11 +64,11 @@
                                                 string strError = (string)TempData["login"];
                                                 if (strError == "fail")
                                                 {
-                                                    <span>The username and password are incorrect</span>
+                                                    <span>The account is incorrect</span>
                                                 }
                                                 else
                                                 {
-                                                    <span> Please enter your information </span>
+                                                    <span>Please enter your information</span>
                                                 }
                                             }
                                         </h4>
@@ -148,10 +148,10 @@
 
                                         <div class="space-6"></div>
                                         <p>
-                                            Enter your email and to receive instructions
+                                            Enter your email to reset your password
                                         </p>
 
-                                        <form action="@Url.Action("ForgetPassword","Login")">
+                                        <form action="@Url.Action("ForgetPassword","Login")" method="post">
                                             <fieldset>
                                                 <label class="block clearfix">
                                                     <span class="block input-icon input-icon-right">
@@ -161,7 +161,7 @@
                                                 </label>
 
                                                 <div class="clearfix">
-                                                    <button type="button" class="width-35 pull-right btn btn-sm btn-danger">
+                                                    <button type="submit" class="width-35 pull-right btn btn-sm btn-danger">
                                                         <i class="ace-icon fa fa-lightbulb-o"></i>
                                                         <span class="bigger-110">Send Me!</span>
                                                     </button>
@@ -252,10 +252,16 @@
 			});
     </script>
     <script>
-        console.log('@TempData["login"]');
         if('@TempData["login"]' == "fail")
         {
             alert("Username and password is incorrect");
+        }
+        if ('@TempData["reset"]' == "fail") {
+            alert("The email does not exist");
+        }
+        else if ('@TempData["reset"]' == "success")
+        {
+            alert('Reset successfully. Please check your email');
         }
     </script>
 </body>

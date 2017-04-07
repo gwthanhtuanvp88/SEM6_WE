@@ -168,11 +168,6 @@ create table Claim(
 
 go
 insert into Claim values('Claim 1', '',GETDATE(), 1, 1, 1, '', null, 0 ,1)
-insert into Claim values('Claim 1', '',GETDATE(), 1, 2, 1, '', null, 0 ,1)
-insert into Claim values('Claim 1', '',GETDATE(), 1, 3, 1, '', null, 0 ,1)
-insert into Claim values('Claim 1', '',GETDATE(), 2, 4, 2, '', null, 0 ,1)
-insert into Claim values('Claim 1', '',GETDATE(), 2, 5, 2, '', null, 0 ,1)
-
 
 go 
 
@@ -277,7 +272,7 @@ BEGIN
 	on ay.id = a.academyyearId
 	where ay.id = @academicYearID and c.result = 0 and DATEDIFF(day, c.datesubmited, GETDATE()) > 14
 END
-
+go
 
 -- Day has the most claim 
 CREATE PROCEDURE day_has_the_most_claim

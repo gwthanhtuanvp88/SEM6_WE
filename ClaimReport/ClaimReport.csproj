@@ -204,12 +204,9 @@
     <Compile Include="Models\Coordinator.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
-<<<<<<< HEAD
-=======
     <Compile Include="Models\day_has_the_most_claim_Result.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
->>>>>>> ac8141112592fcb4e16ec03f04bf4e2fcb7746b5
     <Compile Include="Models\Evidence.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
@@ -271,6 +268,7 @@
     <Content Include="Models\ClaimReport.edmx.diagram">
       <DependentUpon>ClaimReport.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\ClaimReport.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

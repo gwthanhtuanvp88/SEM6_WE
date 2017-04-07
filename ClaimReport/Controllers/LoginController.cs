@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using ClaimReport.Models;
 using System.Security.Cryptography;
 using System.Text;
+using System.Net.Mail;
 
 namespace ClaimReport.Controllers
 {
@@ -105,10 +106,44 @@ namespace ClaimReport.Controllers
         {
             return View();
         }
-
+            
+        [HttpPost]
         public ActionResult ForgetPassword(string email)
         {
+            User user = db.Users.FirstOrDefault(u => u.email == email);
+            if(user != null)
+            {
+                Random random = new Random();
+                const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                string str = new string(Enumerable.Repeat(chars, 8)
+                  .Select(s => s[random.Next(s.Length)]).ToArray());
+                byte[] hash;
+                using (MD5 md5 = MD5.Create())
+                {
+                    hash = md5.ComputeHash(Encoding.UTF8.GetBytes(str));
+                }
+                user.password = hash;
+                db.SaveChanges();
+                MailMessage mail = new MailMessage();
+                SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
 
+                mail.From = new MailAddress("claimreportcenter@gmail.com");
+                mail.To.Add(email);
+                mail.Subject = "Reset the password";
+                mail.Body = "Your username is " + user.username +", your new password is : " + str;
+
+                SmtpServer.Port = 587;
+                SmtpServer.Credentials = new System.Net.NetworkCredential("claimreportcenter@gmail.com", "123456aA@");
+                SmtpServer.EnableSsl = true;
+
+                SmtpServer.Send(mail);
+                TempData["reset"] = "success";
+            }
+            else
+            {
+                TempData["reset"] = "fail";
+            }
+            
             return RedirectToAction("index");
         }
     }
