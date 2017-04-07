@@ -77,7 +77,7 @@ create table Faculty(
 	description text,
 	status bit default 1
 )
-select * from claim
+
 go
 
 insert into Faculty values ('Information technology', '', 1)

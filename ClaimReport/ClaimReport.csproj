@@ -203,9 +203,6 @@
     <Compile Include="Models\Coordinator.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\daily_new_claim_each_faculty_Result.cs">
-      <DependentUpon>ClaimReport.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Evidence.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>

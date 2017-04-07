@@ -44,13 +44,14 @@ namespace ClaimReport.Controllers
             if (txtSearch == null)
                 txtSearch = "";
             IQueryable<Claim> lstClaim = null;
-            if(result == null)
+            var user = (User)Session["user"];
+            if (result == null && user != null)
             {
-                lstClaim = db.Claims.Where(c => c.status == true && c.name.Contains(txtSearch)).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
+                lstClaim = db.Claims.Where(c => c.status == true && c.name.Contains(txtSearch) && c.studentid == user.id).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
             }
             else
             {
-                lstClaim = db.Claims.Where(c => c.status == true && c.name.Contains(txtSearch) && c.result==result).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
+                lstClaim = db.Claims.Where(c => c.status == true && c.name.Contains(txtSearch) && c.result== result && c.studentid == user.id).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
             }
             IPagedList<Claim> claims = lstClaim.ToPagedList((int)page, 5);
             return View(claims);
@@ -291,6 +292,7 @@ namespace ClaimReport.Controllers
         {
             return File(Path.Combine(Server.MapPath("~/Evidence"), ImageName), System.Net.Mime.MediaTypeNames.Application.Octet, ImageName);
         }
+
 
         protected override void Dispose(bool disposing)
         {

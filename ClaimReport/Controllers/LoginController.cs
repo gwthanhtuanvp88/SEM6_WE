@@ -15,11 +15,46 @@ namespace ClaimReport.Controllers
         // GET: Login
         public ActionResult Index()
         {
+
+            var user = (User)Session["user"];
+            User cUser = null;
+            var cookie = Request.Cookies["user"];
+
+            if (cookie != null)
+            {
+                int value = Int32.Parse(cookie.Value);
+                cUser = db.Users.FirstOrDefault(u => u.id == value);
+                if(cUser != null)
+                {
+                    user = cUser;
+                    Session["user"] = user;
+                }
+            }
+            if (user != null)
+            {
+                if (user.UserType.name == "Administrator")
+                {
+                    return RedirectToAction("Users", "Administrator");
+                }
+                else if (user.UserType.name == "Manager")
+                {
+                    return RedirectToAction("Index", "Manager");
+                }
+                else if (user.UserType.name == "Coordinator")
+                {
+                    return RedirectToAction("Index", "Coordinator");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Claims");
+                }
+            }
+            
             return View();
         }
 
         [HttpPost]
-        public ActionResult CheckLogin(String username, String password)
+        public ActionResult CheckLogin(String username, String password, bool? remember)
         {
             byte[] hash;
 
@@ -31,7 +66,11 @@ namespace ClaimReport.Controllers
             if (user != null)
             {
                 Session["user"] = user;
-                ViewBag.strErrorMessage = "Username an password are incorrect";
+                if(remember != null)
+                {
+                    var cookie = new HttpCookie("user", user.id.ToString());
+                    Response.AppendCookie(cookie);
+                }
                 if (user.UserType.name == "Administrator")
                 {
                     return RedirectToAction("Users", "Administrator");
@@ -50,6 +89,7 @@ namespace ClaimReport.Controllers
                 }
 
             }
+            ViewBag.strErrorMessage = "Username an password are incorrect";
             TempData["login"] = "fail";
             return RedirectToAction("Index", "Login");
         }
@@ -57,12 +97,19 @@ namespace ClaimReport.Controllers
         public ActionResult Logout()
         {
             Session["user"] = null;
+            Response.Cookies["user"].Value = "-1";
             return RedirectToAction("Index");
         }
 
         public ActionResult NoPermission()
         {
             return View();
+        }
+
+        public ActionResult ForgetPassword(string email)
+        {
+
+            return RedirectToAction("index");
         }
     }
 }
