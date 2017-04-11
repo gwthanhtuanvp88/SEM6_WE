@@ -126,13 +126,14 @@ create table Assessment(
 	name nvarchar(100),
 	description nvarchar(500),
 	academyyearId int references Academyyear(id),
+	facultyid int not null references Faculty(id),
 	status bit default 1
 )
 
 go
-insert into Assessment values('Assignment 1', '', 1, 1)
-insert into Assessment values('Project', '', 1, 1)
-insert into Assessment values('Assignment', '', 2, 1)
+insert into Assessment values('Assignment 1', '', 1, 1, 1)
+insert into Assessment values('Project', '', 1, 1, 1)
+insert into Assessment values('Assignment', '', 2, 2, 1)
 go
 create table Item(
 	id int primary key identity(1,1),

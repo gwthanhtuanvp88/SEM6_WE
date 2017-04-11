@@ -45,9 +45,10 @@ namespace ClaimReport.Controllers
                 txtSearch = "";
             IQueryable<Claim> lstClaim = null;
             var user = (User)Session["user"];
+            Student student = db.Students.FirstOrDefault(st => st.userid == user.id);
             if (result == null && user != null)
             {
-                lstClaim = db.Claims.Where(c => c.status == true && c.name.Contains(txtSearch) && c.studentid == user.id).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
+                lstClaim = db.Claims.Where(c => c.status == true && c.name.Contains(txtSearch) && c.studentid == student.id).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
             }
             else
             {
@@ -83,12 +84,18 @@ namespace ClaimReport.Controllers
 
         public void InitViewBagCreate()
         {
+            var user = (User)Session["user"];
+            Student student = db.Students.FirstOrDefault(st => st.userid == user.id);
             //Init viewbag
             Academyyear year = db.Academyyears.FirstOrDefault(c => DateTime.Compare(DateTime.Now, (DateTime)c.startReportDate) > 0
     && (DateTime.Compare(DateTime.Now, (DateTime)c.closureReportDate) < 0));
-            if (year != null)
+            if(student == null)
             {
-                ViewBag.assessmentid = new SelectList(db.Assessments.Where(a => a.academyyearId == year.id), "id", "name");
+                RedirectToAction("Logout", "Login");
+            }
+            if (year != null && student != null)
+            {
+                ViewBag.assessmentid = new SelectList(db.Assessments.Where(a => a.academyyearId == year.id && a.facultyid==student.facultyid), "id", "name");
             }
             if (db.Assessments.Where(a => a.academyyearId == year.id).ToList().Count > 0)
             {
