@@ -31,67 +31,70 @@
                 </div>
                 }
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayName("student name")
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().result)
-        </th>
-        <th>
-            @Html.DisplayName("coordinator name")
-        </th>
-        <th></th>
-    </tr>
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayName("student name")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().result)
+            </th>
+            <th>
+                @Html.DisplayName("coordinator name")
+            </th>
+            <th></th>
+        </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.description)
-        </td>
-        <td>
-            @{
-                if (item.result == 2)
-                {
-                    <p>Rejected</p>
-                }
-                else if (item.result == 1)
-                {
-                    <p>Accepted</p>
-                }
-                else
-                {
-                    <p>Not process yet</p>
-                }
-            }
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Coordinator.User.name)
-        </td>
-        <td>
-            @Html.ActionLink("Add evidence", "AddEvidence", new { id = item.id }) |
-            @Html.ActionLink("Details", "Details", new { id = item.id }) |
-            <a href="#" onClick = "deleteEvent(@item.id, '@item.name')">Delete</a>
-        </td>
-    </tr>
-}
-    <script>
-        function deleteEvent(id, name)
+        @foreach (var item in Model)
         {
-            if (confirm("Do you really want to delete the claim "+name))
-                window.location.href = "/claims/delete/"+id;
-            else
-                return false;
-        }
-    </script>
-</table>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.description)
+                </td>
+                <td>
+                    @{
+                        if (item.result == 2)
+                        {
+                            <p>Rejected</p>
+                        }
+                        else if (item.result == 1)
+                        {
+                            <p>Accepted</p>
+                        }
+                        else
+                        {
+                            <p>Not process yet</p>
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Coordinator.User.name)
+                </td>
+                <td>
+                    @Html.ActionLink("Add evidence", "AddEvidence", new { id = item.id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.id }) |
+                    <a href="#" onClick="deleteEvent(@item.id, '@item.name')">Delete</a>
+                </td>
+            </tr>
+                        }
+        <script>
+            function deleteEvent(id, name)
+            {
+                if (confirm("Do you really want to delete the claim "+name))
+                    window.location.href = "/claims/delete/"+id;
+                else
+                    return false;
+            }
+        </script>
+    </table>
+</div>
 <div id='Paging' style="text-align: center">
     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
     of @Model.PageCount

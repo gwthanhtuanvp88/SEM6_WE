@@ -484,6 +484,15 @@ namespace ClaimReport.Controllers
                 flag = true;
             }
 
+            var Coordinator = db.UserTypes.Single(x => x.name == "Coordinator");
+            int facultyId = Convert.ToInt32(model.facultyId);
+            var Faculty = db.Coordinators.Where(x => x.facutyid == facultyId).ToList();
+            if (model.usertypeid == Coordinator.id && Faculty.Count > 0)
+            {
+                ModelState.AddModelError(string.Empty, "Faculty already exists Coordinator.");
+                flag = true;
+            }
+
             if (flag)
             {
                 return View("UserCreate");
@@ -550,13 +559,15 @@ namespace ClaimReport.Controllers
             var coordinator = db.Coordinators.SingleOrDefault(x => x.userid == id);
             if (coordinator != null)
             {
-                ViewBag.CoordinatorSelected = coordinator.facutyid.ToString();
+                ViewBag.FacultySelected = coordinator.facutyid.ToString();
             }
-
+ 
             ViewBag.Faculty = db.Faculties.ToList();
             ViewBag.UserType = db.UserTypes.ToList();
 
             User user = db.Users.SingleOrDefault(x => x.id == id);
+            ViewBag.UserTypeSelected = user.usertypeid;
+
             UserModel um = new UserModel();
             um.id = user.id;
             um.username = user.username;
@@ -572,6 +583,20 @@ namespace ClaimReport.Controllers
         [HttpPost]
         public ActionResult UserEdit(UserModel model)
         {
+            var student = db.Students.SingleOrDefault(x => x.userid == model.id);
+            var coordinator = db.Coordinators.SingleOrDefault(x => x.userid == model.id);
+
+            if (student != null)
+            {
+                ViewBag.FacultySelected = student.facultyid.ToString();
+            }
+                        
+            if (coordinator != null)
+            {
+                ViewBag.FacultySelected = coordinator.facutyid.ToString();
+            }
+
+            ViewBag.UserTypeSelected = model.usertypeid;
             ViewBag.Faculty = db.Faculties.ToList();
             ViewBag.UserType = db.UserTypes.ToList();
 
@@ -606,6 +631,15 @@ namespace ClaimReport.Controllers
                 flag = true;
             }
 
+            var Coordinator = db.UserTypes.Single(x => x.name == "Coordinator");
+            int facultyId = Convert.ToInt32(model.facultyId);
+            var Faculty = db.Coordinators.Single(x => x.facutyid == facultyId);
+            if (model.usertypeid == Coordinator.id && Faculty.id != 0 && Faculty.userid != model.id)
+            {
+                ModelState.AddModelError(string.Empty, "Faculty already exists Coordinator.");
+                flag = true;
+            }
+
             if (flag)
             {
                 return View("UserEdit");
@@ -631,13 +665,11 @@ namespace ClaimReport.Controllers
 
             if (usertype.name == "Student")
             {
-                var student = db.Students.SingleOrDefault(x => x.userid == model.id);
                 student.facultyid = Convert.ToInt32(model.facultyId);
             }
 
             if (usertype.name == "Coordinator")
             {
-                var coordinator = db.Coordinators.SingleOrDefault(x => x.userid == model.id);
                 coordinator.facutyid = Convert.ToInt32(model.facultyId);
             }
 
