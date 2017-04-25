@@ -82,6 +82,10 @@ namespace ClaimReport.Models
         [Required]
         [Display(Name = "Academy Year")]
         public int? academyeYearId { get; set; }
+
+        [Required]
+        [Display(Name = "Faculty")]
+        public int facultyid { get; set; }
     }
 
     public class ItemModel

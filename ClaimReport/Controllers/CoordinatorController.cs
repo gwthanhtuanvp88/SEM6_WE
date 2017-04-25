@@ -35,7 +35,7 @@ namespace ClaimReport.Controllers
         }
 
         // GET: Coordinator
-        public ActionResult Index(int? page)
+        public ActionResult Index(int? page, string txtSearch)
         {
             if (Session["user"] == null)
             {
@@ -45,9 +45,20 @@ namespace ClaimReport.Controllers
             var user = (User)Session["user"];
             var coordinator = db.Coordinators.FirstOrDefault(x => x.userid == user.id);
 
-            if (page == null) { page = 1;} 
-            var lstClaim = db.Claims.Where(c => c.status == true && c.coordinatorId == coordinator.id).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
+            if (page == null) { page = 1;}
+            IQueryable<Claim> lstClaim = null;
+            if (String.IsNullOrEmpty(txtSearch))
+            {
+                lstClaim = db.Claims.Where(c => c.status == true && c.coordinatorId == coordinator.id).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
+            }
+            else
+            {
+                lstClaim = db.Claims.Where(c => c.status == true && c.coordinatorId == coordinator.id && c.name.Contains(txtSearch)).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
+                ViewBag.ViewAll = true;
+            }
+            
             IPagedList<Claim> claims = lstClaim.ToPagedList((int)page, 5);
+            ViewBag.txtSearch = txtSearch;
             return View(claims);
         }
 

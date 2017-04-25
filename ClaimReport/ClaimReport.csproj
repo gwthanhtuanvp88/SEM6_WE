@@ -204,7 +204,25 @@
     <Compile Include="Models\Coordinator.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\day_has_the_most_claim1_Result.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\day_has_the_most_claim_for_a_week1_Result.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\day_has_the_most_claim_for_a_week_Result.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\day_has_the_most_claim_for_a_week_Result1.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\day_has_the_most_claim_for_a_week_Result2.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\day_has_the_most_claim_Result.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\day_has_the_most_claim_Result1.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Evidence.cs">
@@ -216,10 +234,34 @@
     <Compile Include="Models\Item.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Number_of_claims_within_each_Faculty_for_a_week_Result.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Number_of_claims_within_each_Faculty_for_a_week_Result1.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Number_of_claims_within_each_Faculty_for_a_week_Result2.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Number_of_claims_within_each_Faculty_for_a_week_Result3.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Number_of_claims_within_each_Faculty_for_each_academic_year1_Result.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Number_of_claims_within_each_Faculty_for_each_academic_year_Result.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Number_of_claims_within_each_Faculty_for_each_academic_year_Result1.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Number_of_students_making_a_claim_within_each_Faculty_for_each_academic_year1_Result.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Number_of_students_making_a_claim_within_each_Faculty_for_each_academic_year_Result.cs">
+      <DependentUpon>ClaimReport.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Number_of_students_making_a_claim_within_each_Faculty_for_each_academic_year_Result1.cs">
       <DependentUpon>ClaimReport.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Role.cs">
@@ -283,6 +325,7 @@
     <Content Include="Scripts\report.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\week-report.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -343,6 +386,8 @@
     <Content Include="Views\Administrator\AssessmentEdit.cshtml" />
     <Content Include="Views\Manager\Report.cshtml" />
     <Content Include="Views\Manager\AcademyYearReport.cshtml" />
+    <Content Include="Views\Manager\WeekReport.cshtml" />
+    <Content Include="Views\Shared\_Logo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

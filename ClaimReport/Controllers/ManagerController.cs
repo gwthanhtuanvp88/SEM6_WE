@@ -152,6 +152,7 @@ namespace ClaimReport.Controllers
             });
         }
 
+        // Academy Year
         public ActionResult AcademyYearReport()
         {
             ViewBag.AcademyYear = db.Academyyears.ToList();
@@ -239,5 +240,94 @@ namespace ClaimReport.Controllers
                 data = data
             });
         }
+
+        // A week
+        public ActionResult WeekReport()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult Percentage_of_claims_by_each_Faculty_for_a_week(DateTime day)
+        {
+            var result = db.Number_of_claims_within_each_Faculty_for_a_week(day).ToList();
+
+            List<string> labels = new List<string>();
+            List<int?> data = new List<int?>();
+
+            foreach (var item in result)
+            {
+                labels.Add(item.name);
+                data.Add(item.claims);
+            }
+
+            return Json(new
+            {
+                labels = labels,
+                data = data
+            });
+        }
+
+        [HttpPost]
+        public JsonResult Claims_without_uploaded_evidence_for_a_week(DateTime date)
+        {
+            var result = db.Claims_without_uploaded_evidence_for_a_week(date).ToList();
+            var total = db.Claims.ToList().Count;
+            List<string> labels = new List<string>();
+            labels.Add("Evidences");
+            labels.Add("No Evidence");
+
+            List<int> data = new List<int>();
+            data.Add(total - result[0].Value);
+            data.Add(result[0].Value);
+
+            return Json(new
+            {
+                labels = labels,
+                data = data
+            });
+        }
+
+        [HttpPost]
+        public JsonResult Claims_without_a_decision_after_14_days_for_a_week(DateTime day)
+        {
+            var result = db.Claims_without_a_decision_after_14_days_for_a_week(day).ToList();
+            var total = db.Claims.ToList().Count;
+            List<string> labels = new List<string>();
+            labels.Add("Processed");
+            labels.Add("no process");
+
+            List<int> data = new List<int>();
+            data.Add(total - result[0].Value);
+            data.Add(result[0].Value);
+
+            return Json(new
+            {
+                labels = labels,
+                data = data
+            });
+        }
+
+        [HttpPost]
+        public JsonResult day_has_the_most_claim_for_a_week(DateTime day)
+        {
+            var result = db.day_has_the_most_claim_for_a_week(day).ToList();
+            List<string> labels = new List<string>();
+            List<int?> data = new List<int?>();
+
+            foreach (var item in result)
+            {
+                labels.Add(Convert.ToDateTime(item.datesubmited).ToString("MM/dd//yyy"));
+                data.Add(item.claims);
+            }
+
+            return Json(new
+            {
+                labels = labels,
+                data = data
+            });
+        }
+
+
     }
 }

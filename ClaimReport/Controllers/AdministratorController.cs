@@ -423,6 +423,7 @@ namespace ClaimReport.Controllers
             else
             {
                 lstUser = db.Users.Where(x => x.status == true && x.name.Contains(txtSearch)).OrderByDescending(x => x.id);
+                ViewBag.ViewAll = true;
             }
 
             if (TempData["errorMessage"] != null)
@@ -703,6 +704,7 @@ namespace ClaimReport.Controllers
             else
             {
                 lstAcademyYear = db.Academyyears.Where(x => x.status == true && x.name.Contains(txtSearch)).OrderByDescending(x => x.id);
+                ViewBag.ViewAll = true;
             }
 
             if (TempData["errorMessage"] != null)
@@ -920,6 +922,7 @@ namespace ClaimReport.Controllers
         public ActionResult AssessmentCreate()
         {
             ViewBag.AcademyYear = db.Academyyears.ToList();
+            ViewBag.Faculty = db.Faculties.ToList();
             return View();
         }
 
@@ -936,7 +939,7 @@ namespace ClaimReport.Controllers
             var flag = false;
 
             // Check duplicate
-            var duplicate = db.Assessments.Where(x => x.name == model.Name && x.academyyearId == model.academyeYearId).ToList();
+            var duplicate = db.Assessments.Where(x => x.name == model.Name && x.academyyearId == model.academyeYearId && x.facultyid == model.facultyid).ToList();
             if (duplicate.Count > 0)
             {
                 ModelState.AddModelError(String.Empty, "This item already exists.");
@@ -952,6 +955,7 @@ namespace ClaimReport.Controllers
             assessment.name = model.Name;
             assessment.description = model.Description;
             assessment.academyyearId = model.academyeYearId;
+            assessment.facultyid = model.facultyid;
             assessment.status = true;
 
             db.Assessments.Add(assessment);
@@ -963,17 +967,18 @@ namespace ClaimReport.Controllers
 
         public ActionResult AssessmentEdit(int id)
         {
-            
-
             AssessmentModel AssessmentModel = new AssessmentModel();
             Assessment assessment = db.Assessments.SingleOrDefault(x => x.id == id);
             AssessmentModel.ID = assessment.id;
             AssessmentModel.Name = assessment.name;
             AssessmentModel.Description = assessment.description;
             AssessmentModel.academyeYearId = assessment.academyyearId;
+            AssessmentModel.facultyid = assessment.facultyid;
 
             ViewBag.AcademyYear = db.Academyyears.ToList();
             ViewBag.AcademyYearSelected = assessment.academyyearId;
+            ViewBag.Faculty = db.Faculties.ToList();
+            ViewBag.FacultySelected = assessment.facultyid;
             return View(AssessmentModel);
         }
 
@@ -982,6 +987,8 @@ namespace ClaimReport.Controllers
         {
             ViewBag.AcademyYear = db.Academyyears.ToList();
             ViewBag.AcademyYearSelected = model.academyeYearId;
+            ViewBag.Faculty = db.Faculties.ToList();
+            ViewBag.FacultySelected = model.facultyid;
 
             if (!ModelState.IsValid)
             {
@@ -991,7 +998,7 @@ namespace ClaimReport.Controllers
             var flag = false;
 
             // Check duplicate
-            Assessment duplicate = db.Assessments.SingleOrDefault(x => x.name == model.Name && x.academyyearId == model.academyeYearId);
+            Assessment duplicate = db.Assessments.SingleOrDefault(x => x.name == model.Name && x.academyyearId == model.academyeYearId && x.facultyid == model.facultyid);
             if (duplicate != null && duplicate.id != model.ID)
             {
                 ModelState.AddModelError(String.Empty, "This Academy year already exists.");
@@ -1008,6 +1015,7 @@ namespace ClaimReport.Controllers
             assessment.name = model.Name;
             assessment.description = model.Description;
             assessment.academyyearId = model.academyeYearId;
+            assessment.facultyid = model.facultyid;
             db.SaveChanges();
 
             TempData["successMessage"] = "Edit successful.";

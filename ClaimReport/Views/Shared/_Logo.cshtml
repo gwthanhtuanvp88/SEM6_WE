@@ -1,0 +1,46 @@
+﻿@using ClaimReport.Models
+@{var user = (User)Session["user"];}
+@if (user != null)
+{
+    if (user.UserType.name == "Administrator")
+    {
+        <a href="@Url.Action("Users", "Administrator")" class="navbar-brand">
+            <small>
+                <i class="fa fa-leaf"></i>
+                Claim Report
+            </small>
+        </a>
+    }
+
+    if (user.UserType.name == "Coordinator")
+    {
+        <a href="@Url.Action("Index", "Coordinator")" class="navbar-brand">
+            <small>
+                <i class="fa fa-leaf"></i>
+                Claim Report
+            </small>
+        </a>
+    }
+
+    if (user.UserType.name == "Manager")
+    {
+        <a href="@Url.Action("Index", "Manager")" class="navbar-brand">
+            <small>
+                <i class="fa fa-leaf"></i>
+                Claim Report
+            </small>
+        </a>
+    }
+
+    if (user.UserType.name == "Student")
+    {
+        <a href="@Url.Action("Index", "Claims")" class="navbar-brand">
+            <small>
+                <i class="fa fa-leaf"></i>
+                Claim Report
+            </small>
+        </a>
+    }
+}
+
+

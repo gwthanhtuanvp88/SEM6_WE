@@ -252,7 +252,7 @@ BEGIN
 	on a.id = i.assessmentId
 	join Academyyear ay 
 	on ay.id = a.academyyearId
-	where e.id is null and ay.id = 1
+	where e.id is null and ay.id = @academicYearID
 END
 
 go
@@ -293,5 +293,91 @@ BEGIN
 	join Academyyear ay
 	on a.academyyearId = ay.id
 	where ay.id = @academicYearID
+	group by c.datesubmited
+END
+
+/* Week Report
+===============================*/
+
+-- Number of claims within each Faculty for a week
+-- Percentage of claims by each Faculty for a week 
+
+CREATE PROCEDURE Number_of_claims_within_each_Faculty_for_a_week
+	@yourdate date
+AS
+BEGIN
+	select f.name, COUNT(DISTINCT c.id) as claims
+	from Claim c
+	join Student s
+	on c.studentid = s.id
+	join Faculty f 
+	on s.facultyid = f.id
+	join item i 
+	on c.itemId = i.id
+	join Assessment a
+	on i.assessmentId = a.id
+	join Academyyear ay
+	on a.academyyearId = ay.id
+	where c.datesubmited between dateadd(ww, datediff(ww, 0, @yourdate), -1) and dateadd(ww, datediff(ww, 0, @yourdate), 5)
+	group by f.name
+END
+
+go 
+-- Claims without uploaded evidence.
+CREATE PROCEDURE Claims_without_uploaded_evidence_for_a_week
+	@yourdate date
+AS
+BEGIN
+	select COUNT(DISTINCT c.id) as claims
+	from Claim c
+	LEFT join Evidence e
+	on c.id = e.claimid
+	join Item i 
+	on i.id = c.itemId
+	join Assessment a 
+	on a.id = i.assessmentId
+	join Academyyear ay 
+	on ay.id = a.academyyearId
+	where e.id is null and c.datesubmited between dateadd(ww, datediff(ww, 0, @yourdate), -1) and dateadd(ww, datediff(ww, 0, @yourdate), 5)
+END
+
+go
+-- Claims without a decision after 14 days.
+CREATE PROCEDURE Claims_without_a_decision_after_14_days_for_a_week
+	@yourdate date
+AS
+BEGIN
+	select COUNT(DISTINCT c.id) as claims
+	from Claim c
+	LEFT join Evidence e
+	on c.id = e.claimid
+	join Item i 
+	on i.id = c.itemId
+	join Assessment a 
+	on a.id = i.assessmentId
+	join Academyyear ay 
+	on ay.id = a.academyyearId
+	where c.datesubmited between dateadd(ww, datediff(ww, 0, @yourdate), -1) and dateadd(ww, datediff(ww, 0, @yourdate), 5) and c.result = 0 and DATEDIFF(day, c.datesubmited, GETDATE()) > 14
+END
+go
+
+-- Day has the most claim 
+CREATE PROCEDURE day_has_the_most_claim_for_a_week
+	@yourdate date
+AS
+BEGIN
+	select c.datesubmited, COUNT(DISTINCT c.id) as claims
+	from Claim c
+	join Student s
+	on c.studentid = s.id
+	join Faculty f 
+	on s.facultyid = f.id
+	join item i 
+	on c.itemId = i.id
+	join Assessment a
+	on i.assessmentId = a.id
+	join Academyyear ay
+	on a.academyyearId = ay.id
+	where c.datesubmited between dateadd(ww, datediff(ww, 0, @yourdate), -1) and dateadd(ww, datediff(ww, 0, @yourdate), 5)
 	group by c.datesubmited
 END

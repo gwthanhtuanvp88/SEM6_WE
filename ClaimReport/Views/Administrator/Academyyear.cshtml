@@ -94,3 +94,8 @@
 <div id='paging'>
     @Html.PagedListPager(Model, page => Url.Action("Academyyear", new { page }))
 </div>
+
+@if (ViewBag.ViewAll != null)
+{
+    @Html.ActionLink("Back to List", "Academyyear")
+}
