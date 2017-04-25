@@ -10,14 +10,26 @@
 
 <p>
     @Html.ActionLink("Add new claim report", "Create")
-    @using (Html.BeginForm("Index", "Claims", FormMethod.Get))
-    {
-        <input id="idnotprocess" type="radio" name="result" value="0"/>        <label for="idnotprocess">Not process</label>
-        <input id="idaccept" type="radio" name="result" value="1"/>        <label for="idaccept">Accepted</label>
-        <input id="idject" type="radio" name="result" value="2" />       <label for="idject">Rejected</label>
-        <input type="text" placeholder="search" name="txtSearch"/>
-        <input type="submit" value="Search"/>
-    }
+        @using (Html.BeginForm("Index", "Claims", FormMethod.Get))
+        {
+            <div class="form-group col-md-4">
+                <label class="radio-inline">
+                    <input id="idnotprocess" type="radio" name="result" value="0" />        <label for="idnotprocess">Not process</label>
+                </label>
+                <label class="radio-inline">
+                    <input id="idaccept" type="radio" name="result" value="1" />        <label for="idaccept">Accepted</label>
+                </label>
+                <label class="radio-inline">
+                    <input id="idject" type="radio" name="result" value="2" />       <label for="idject">Rejected</label>
+                </label>
+                </div>
+                <div class="form-group col-md-8">
+                    <input type="text" class="form-control" placeholder="search" name="txtSearch">
+                    <span class="input-group-btn">
+                        <input type="submit" value="Search" class="btn btn-default" />
+                    </span>
+                </div>
+                }
 </p>
 <table class="table">
     <tr>
@@ -84,5 +96,5 @@
     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
     of @Model.PageCount
 
-    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page, txtSearch = ViewBag.txtSearch }))
 </div>

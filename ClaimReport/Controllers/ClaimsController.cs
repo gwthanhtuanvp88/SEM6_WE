@@ -18,7 +18,7 @@ namespace ClaimReport.Controllers
     {
         private ReportClaimEntities db = new ReportClaimEntities();
 
-        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var user = (User)Session["user"];
             if (user == null)
@@ -33,7 +33,7 @@ namespace ClaimReport.Controllers
                 }
             }
 
-            base.OnActionExecuted(filterContext);
+            base.OnActionExecuting(filterContext);
         }
 
         // GET: Claims
@@ -55,6 +55,7 @@ namespace ClaimReport.Controllers
                 lstClaim = db.Claims.Where(c => c.status == true && c.name.Contains(txtSearch) && c.result== result && c.studentid == user.id).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
             }
             IPagedList<Claim> claims = lstClaim.ToPagedList((int)page, 5);
+            ViewBag.txtSearch = txtSearch;
             return View(claims);
         }
 
@@ -97,9 +98,9 @@ namespace ClaimReport.Controllers
             {
                 ViewBag.assessmentid = new SelectList(db.Assessments.Where(a => a.academyyearId == year.id && a.facultyid==student.facultyid), "id", "name");
             }
-            if (db.Assessments.Where(a => a.academyyearId == year.id).ToList().Count > 0)
+            if (db.Assessments.Where(a => a.academyyearId == year.id && a.facultyid == student.facultyid).ToList().Count > 0)
             {
-                Assessment ass = db.Assessments.Where(a => a.academyyearId == year.id).ToList()[0];
+                Assessment ass = db.Assessments.Where(a => a.academyyearId == year.id && a.facultyid == student.facultyid).ToList()[0];
                 ViewBag.itemId = new SelectList(db.Items.Where(i => i.assessmentId == ass.id), "id", "name");
             }
             else
@@ -130,12 +131,12 @@ namespace ClaimReport.Controllers
         {
             if (ModelState.IsValid)
             {
+                InitViewBagCreate();
                 User user = (User)Session["user"];
                 Item item = db.Items.FirstOrDefault(a => a.id == claim.itemId);
                 var student = db.Students.FirstOrDefault(s => s.userid == user.id && s.status == true);
                 if (student != null && item != null)
                 {
-                    InitViewBagCreate();
                     claim.studentid = student.id;
                     var coordinator = db.Coordinators.FirstOrDefault(c => c.facutyid == student.facultyid && c.status == true);
                     if (coordinator != null && DateTime.Compare(DateTime.Now, (DateTime)item.closureReportDate) < 0)
@@ -202,6 +203,11 @@ namespace ClaimReport.Controllers
                         ModelState.AddModelError("itemId", "The time to upload claim is end");
                         return View();
                     }
+                }
+                else
+                {
+                    ModelState.AddModelError("itemId", "No item is choosen");
+                    return View();
                 }
                 return RedirectToAction("Index");
             }

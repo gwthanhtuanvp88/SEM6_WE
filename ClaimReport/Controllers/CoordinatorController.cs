@@ -16,7 +16,7 @@ namespace ClaimReport.Controllers
     {
         private ReportClaimEntities db = new ReportClaimEntities();
 
-        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var user = (User)Session["user"];
             if (user == null)
@@ -31,7 +31,7 @@ namespace ClaimReport.Controllers
                 }
             }
 
-            base.OnActionExecuted(filterContext);
+            base.OnActionExecuting(filterContext);
         }
 
         // GET: Coordinator
