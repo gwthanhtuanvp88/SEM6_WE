@@ -8,8 +8,11 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Add new claim report", "Create")
+    <div class="row">
+    <div class="col-md-2 m-top">
+        @Html.ActionLink("Create New", "Create", "", new { @class = "btn btn-block btn-sm btn-primary" })
+    </div>
+    <div class="col-md-10 m-top">
         @using (Html.BeginForm("Index", "Claims", FormMethod.Get))
         {
             <div class="form-group col-md-4">
@@ -22,15 +25,17 @@
                 <label class="radio-inline">
                     <input id="idject" type="radio" name="result" value="2" />       <label for="idject">Rejected</label>
                 </label>
-                </div>
-                <div class="form-group col-md-8">
-                    <input type="text" class="form-control" placeholder="search" name="txtSearch">
-                    <span class="input-group-btn">
-                        <input type="submit" value="Search" class="btn btn-default" />
-                    </span>
-                </div>
-                }
-</p>
+            </div>
+            <div class="form-group col-md-8">
+                <input type="text" class="form-control" placeholder="search" name="txtSearch">
+                <span class="input-group-btn">
+                    <input type="submit" value="Search" class="btn btn-default" />
+                </span>
+            </div>
+        }
+    </div>
+</div>
+
 <div class="table-responsive">
     <table class="table">
         <tr>

@@ -52,7 +52,7 @@ namespace ClaimReport.Controllers
             }
             else
             {
-                lstClaim = db.Claims.Where(c => c.status == true && c.name.Contains(txtSearch) && c.result== result && c.studentid == user.id).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
+                lstClaim = db.Claims.Where(c => c.status == true && c.name.Contains(txtSearch) && c.result== result && c.studentid == student.id).Include(c => c.Item).Include(c => c.Coordinator).Include(c => c.Student).OrderByDescending(c => c.datesubmited);
             }
             IPagedList<Claim> claims = lstClaim.ToPagedList((int)page, 5);
             ViewBag.txtSearch = txtSearch;
